@@ -1,225 +1,166 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>BADA – Discovery (BSA Framework)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
     body {
       margin: 0;
-      background-color: #f5f5f7;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0ecff, #f5f5f7);
       color: #111827;
     }
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
     header {
-      background-color: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 24px;
+      position: sticky;
+      top: 0;
+      background: rgba(245, 245, 247, 0.9);
+      border-bottom: 1px solid rgba(209, 213, 219, 0.6);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
     }
-    .header-left {
+    .logo-area {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
-    .logo {
-      background-color: #2563eb;
-      color: white;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
     }
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-    }
-    .logo-text span:first-child {
-      font-weight: 600;
-    }
-    .logo-text span:last-child {
-      font-size: 12px;
-      color: #6b7280;
-    }
-    .btn-secondary {
-      background-color: white;
-      border: 1px solid #d1d5db;
-      color: #111827;
-      padding: 6px 12px;
-      border-radius: 9999px;
-      cursor: pointer;
-    }
-    .main {
-      max-width: 960px;
-      margin: 32px auto;
+    .main-inner {
+      max-width: 1120px;
+      margin: 20px auto;
       padding: 0 16px;
     }
     .stage-box {
-      background-color: #ffffff;
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
       border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-      padding: 20px;
-      margin-bottom: 24px;
     }
     .stage-name {
-      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 12px;
+      font-size: 18px;
       color: #2563eb;
+      margin-bottom: 10px;
     }
     .grid-2x2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
     }
     textarea {
       width: 100%;
-      height: 60px;
+      font-size: 14px;
       padding: 10px;
+      border-radius: 10px;
       border: 1px solid #d1d5db;
-      border-radius: 8px;
       resize: vertical;
     }
-    .btn-ai {
-      background-color: #10b981;
-      color: white;
-      border: none;
+    .btn {
+      display: inline-block;
+      background: #10b981;
+      color: #fff;
       padding: 8px 16px;
-      border-radius: 9999px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 999px;
       cursor: pointer;
-      margin-bottom: 10px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: #6b7280;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <div class="logo">B</div>
-      <div class="logo-text">
-        <span>BADA Discovery</span>
-        <span>BSA 프레임워크 입력</span>
+  <div class="page">
+    <header>
+      <div class="header-inner">
+        <div class="logo-area">
+          <div class="logo-badge">B</div>
+          <div>
+            <div style="font-weight:700;font-size:18px;">BADA Discovery</div>
+            <div style="font-size:12px;color:#6b7280;">BSA 프레임워크 입력</div>
+          </div>
+        </div>
+        <div>
+          <button class="btn" onclick="goBack()">← 목록으로</button>
+        </div>
       </div>
-    </div>
-    <div>
-      <span id="dealNamePill">Loading...</span>
-      <button class="btn-secondary" onclick="goBack()">← 목록으로</button>
-    </div>
-  </header>
-  <main class="main">
-    <div id="stages"></div>
-  </main>
-  <footer>&copy; 2025 BADA Framework · Powered by PreSales Lab</footer>
+    </header>
+
+    <main class="main-inner">
+      <h2>고객 여정 단계별 입력</h2>
+      <div id="stages"></div>
+    </main>
+  </div>
+
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const dealId = urlParams.get("dealId");
-    let dealData = {};
+    const stages = [
+      "Awareness", "Consideration", "Evaluation", "Purchase",
+      "Onboarding", "Adoption & Retention", "Expansion", "Renewal"
+    ];
 
     function goBack() {
       window.location.href = "index.html";
     }
 
-    function loadDeal() {
-      const stored = localStorage.getItem("bada_deals");
-      if (!stored) return;
-      let dealList = JSON.parse(stored);
-      if (!Array.isArray(dealList)) return;
-      const found = dealList.find((d) => d.id === dealId);
-      if (!found) return;
-      dealData = found;
-      document.getElementById("dealNamePill").innerText = found.name;
-    }
-
-    const journeyStages = ["Awareness", "Consideration", "Evaluation", "Purchase", "Onboarding", "Adoption & Retention", "Expansion", "Renewal"];
-
     function renderStages() {
       const container = document.getElementById("stages");
-      journeyStages.forEach(stage => {
+      stages.forEach(stage => {
         const box = document.createElement("div");
         box.className = "stage-box";
         box.innerHTML = `
           <div class="stage-name">${stage}</div>
           <div class="grid-2x2">
-            <textarea id="${stage}-behavior" placeholder="고객 행동"></textarea>
-            <textarea id="${stage}-emotion" placeholder="고객 감정"></textarea>
-            <textarea id="${stage}-channel" placeholder="정보 채널"></textarea>
-            <textarea id="${stage}-pain" placeholder="문제점"></textarea>
+            <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
+            <textarea placeholder="감정" id="${stage}-emotion"></textarea>
+            <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
+            <textarea placeholder="문제점" id="${stage}-pain"></textarea>
           </div>
-          <button class="btn-ai" onclick="generateJTBDAndToDo('${stage}')">💡 Insight 생성</button>
-          <textarea id="${stage}-jtbd" placeholder="JTBD"></textarea>
-          <textarea id="${stage}-todo" placeholder="Seller To-Do"></textarea>
+          <button class="btn" onclick="generateInsight('${stage}')">Insight 생성</button>
+          <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
+          <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
         `;
         container.appendChild(box);
       });
     }
 
-    async function callGeminiViaGAS(prompt) {
-      const gasUrl = 'YOUR_GAS_DEPLOYMENT_URL';
-      const response = await fetch(gasUrl, {
-        method: 'POST',
-        body: JSON.stringify({ prompt }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const result = await response.json();
-      return result.candidates?.[0]?.content?.parts?.[0]?.text || "결과 없음";
-    }
-
-    function buildPrompt(stage) {
+    function generateInsight(stage) {
       const behavior = document.getElementById(`${stage}-behavior`).value;
       const emotion = document.getElementById(`${stage}-emotion`).value;
       const channel = document.getElementById(`${stage}-channel`).value;
       const pain = document.getElementById(`${stage}-pain`).value;
-      return `
-당신은 B2B 고객 여정 전략가입니다. 아래 고객 정보를 바탕으로 고객의 JTBD와 프리세일즈 담당자의 To-Do를 생성하세요.
 
-[고객 여정 단계] ${stage}
-[고객 행동] ${behavior}
-[감정] ${emotion}
-[정보 채널] ${channel}
-[문제점] ${pain}
-
-결과는 다음과 같은 형식으로 작성하세요:
-
-고객의 JTBD는 ~이다.
-Seller To-Do:
-- ~
-- ~
-      `;
+      const prompt = `고객 여정 단계: ${stage}\n고객 행동: ${behavior}\n감정: ${emotion}\n채널: ${channel}\n문제점: ${pain}`;
+      // 여기에 Gemini 호출 함수 연결
+      alert("(데모) Insight 생성 요청:\n" + prompt);
     }
 
-    async function generateJTBDAndToDo(stage) {
-      const prompt = buildPrompt(stage);
-      const result = await callGeminiViaGAS(prompt);
-      const [jtbdLine, ...todoLines] = result.split("\n").filter(line => line.trim() !== "");
-      document.getElementById(`${stage}-jtbd`).value = jtbdLine || "";
-      document.getElementById(`${stage}-todo`).value = todoLines.join("\n");
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      loadDeal();
-      renderStages();
-    });
+    window.addEventListener("DOMContentLoaded", renderStages);
   </script>
 </body>
 </html>
