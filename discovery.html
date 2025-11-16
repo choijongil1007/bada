@@ -81,20 +81,32 @@
 
     <script>
       const dealID = new URLSearchParams(window.location.search).get('dealId');
-      const dealData = JSON.parse(localStorage.getItem('deals') || '{}')[dealID];
+      console.log('[DEBUG] URL에서 가져온 dealId:', dealID);
+
+      const dealsRaw = localStorage.getItem('deals');
+      const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
+      console.log('[DEBUG] localStorage에서 가져온 deals 객체:', deals);
+
+      const dealData = deals[dealID];
+      console.log('[DEBUG] dealData:', dealData);
+
+      const dealInfoEl = document.getElementById('deal-info');
+      if (dealData) {
+        dealInfoEl.innerHTML = `
+          <p><strong>Deal 이름:</strong> ${dealData.name}</p>
+          <p><strong>고객사:</strong> ${dealData.customer}</p>
+          <p><strong>고객 담당자:</strong> ${dealData.persona}</p>
+          <p><strong>솔루션:</strong> ${dealData.solution}</p>
+          <p><strong>단계:</strong> ${dealData.stage}</p>
+          <p><strong>자사 담당자:</strong> ${dealData.owner}</p>
+          <p><strong>메모:</strong> ${dealData.memo}</p>
+        `;
+      } else {
+        dealInfoEl.innerHTML = '<p>⚠️ Deal 정보를 불러올 수 없습니다.</p>';
+      }
 
       const phaseNames = ['인식', '고려', '평가', '구매'];
       const questions = ['고객 행동', '고객 감정', '고객 접점', '고객 문제'];
-
-      document.getElementById('deal-info').innerHTML = dealData ? `
-        <p><strong>Deal 이름:</strong> ${dealData.name}</p>
-        <p><strong>고객사:</strong> ${dealData.customer}</p>
-        <p><strong>고객 담당자:</strong> ${dealData.persona}</p>
-        <p><strong>솔루션:</strong> ${dealData.solution}</p>
-        <p><strong>단계:</strong> ${dealData.stage}</p>
-        <p><strong>자사 담당자:</strong> ${dealData.owner}</p>
-        <p><strong>메모:</strong> ${dealData.memo}</p>
-      ` : '<p>Deal 정보를 불러올 수 없습니다.</p>';
 
       const phasesEl = document.getElementById('phases');
       phaseNames.forEach((phase, idx) => {
@@ -147,7 +159,7 @@
       });
 
       async function callGemini(prompt) {
-        const apiKey = 'YOUR_GEMINI_API_KEY';
+        const apiKey = 'YOUR_GEMINI_API_KEY'; // 실제 키로 바꾸세요
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
         const body = {
           contents: [{ parts: [{ text: prompt }] }]
@@ -162,10 +174,11 @@
           const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
           const [jtbd, todo] = text.split('판매자 To-Do:');
           return {
-            jtbd: jtbd.replace('고객 JTBD:', '').trim(),
+            jtbd: jtbd?.replace('고객 JTBD:', '').trim() || '(JTBD 없음)',
             todo: todo?.trim() || '(To-Do 없음)'
           };
         } catch (e) {
+          console.error('[Gemini 호출 오류]', e);
           return { jtbd: '[오류 발생]', todo: '' };
         }
       }
