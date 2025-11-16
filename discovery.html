@@ -1,37 +1,54 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>BADA – Discovery (BSA Framework)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg-body: #f5f5f7;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f9fafb;
+      --border-subtle: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.08);
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #e0ecff, #f5f5f7);
-      color: #111827;
+      background: var(--bg-body);
+      color: var(--text-main);
     }
     .page {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
     header {
       position: sticky;
       top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
       background: rgba(245, 245, 247, 0.9);
       border-bottom: 1px solid rgba(209, 213, 219, 0.6);
-      backdrop-filter: blur(12px);
-      z-index: 10;
     }
     .header-inner {
       max-width: 1120px;
       margin: 0 auto;
       padding: 10px 16px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
     .logo-area {
       display: flex;
@@ -43,55 +60,92 @@
       height: 32px;
       border-radius: 12px;
       background: linear-gradient(135deg, #2563eb, #4f46e5);
-      color: #fff;
-      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: #f9fafb;
+      font-weight: 700;
+      font-size: 16px;
       box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+    }
+    .logo-text-main {
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .logo-text-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      font-size: 13px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: #111827;
+      color: #f9fafb;
+    }
+    .btn.secondary {
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid var(--border-subtle);
     }
     .main-inner {
       max-width: 1120px;
       margin: 20px auto;
       padding: 0 16px;
-    }
-    .stage-box {
-      background: #fff;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 30px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
-      border: 1px solid #e5e7eb;
-    }
-    .stage-name {
-      font-weight: 600;
-      font-size: 18px;
-      color: #2563eb;
-      margin-bottom: 10px;
-    }
-    .grid-2x2 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+    }
+    .info-box, .input-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+    .info-box h2 {
+      margin-top: 0;
+      font-size: 16px;
+    }
+    .input-box h2 {
+      margin-bottom: 12px;
     }
     textarea {
       width: 100%;
-      font-size: 14px;
+      height: 80px;
+      margin-bottom: 10px;
       padding: 10px;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      resize: vertical;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      font-size: 14px;
     }
-    .btn {
-      display: inline-block;
+    .btn.insight {
       background: #10b981;
-      color: #fff;
-      padding: 8px 16px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 500;
+      margin-bottom: 12px;
     }
   </style>
 </head>
@@ -101,66 +155,69 @@
       <div class="header-inner">
         <div class="logo-area">
           <div class="logo-badge">B</div>
-          <div>
-            <div style="font-weight:700;font-size:18px;">BADA Discovery</div>
-            <div style="font-size:12px;color:#6b7280;">BSA 프레임워크 입력</div>
+          <div class="logo-text">
+            <div class="logo-text-main">BADA Discovery</div>
+            <div class="logo-text-sub">BSA 프레임워크 입력</div>
           </div>
         </div>
-        <div>
-          <button class="btn" onclick="goBack()">← 목록으로</button>
+        <div class="header-right">
+          <div class="pill" id="dealNamePill">Loading...</div>
+          <button class="btn secondary" onclick="goBack()">← 목록으로</button>
         </div>
       </div>
     </header>
-
-    <main class="main-inner">
-      <h2>고객 여정 단계별 입력</h2>
-      <div id="stages"></div>
+    <main>
+      <div class="main-inner">
+        <div class="info-box">
+          <h2>Deal 정보</h2>
+          <p><strong>ID:</strong> <span id="dealIdInfo">-</span></p>
+          <p><strong>설명:</strong> <span id="dealDesc">-</span></p>
+        </div>
+        <div class="input-box">
+          <h2>고객 여정 입력</h2>
+          <textarea placeholder="고객 행동" id="behavior"></textarea>
+          <textarea placeholder="고객 감정" id="emotion"></textarea>
+          <textarea placeholder="정보 채널" id="channel"></textarea>
+          <textarea placeholder="문제점" id="pain"></textarea>
+          <button class="btn insight" onclick="generateInsight()">💡 Insight 생성</button>
+          <textarea placeholder="고객의 JTBD" id="jtbd"></textarea>
+          <textarea placeholder="Seller To-Do" id="todo"></textarea>
+        </div>
+      </div>
     </main>
   </div>
-
   <script>
-    const stages = [
-      "Awareness", "Consideration", "Evaluation", "Purchase",
-      "Onboarding", "Adoption & Retention", "Expansion", "Renewal"
-    ];
+    const urlParams = new URLSearchParams(window.location.search);
+    const dealId = urlParams.get("dealId");
 
     function goBack() {
       window.location.href = "index.html";
     }
 
-    function renderStages() {
-      const container = document.getElementById("stages");
-      stages.forEach(stage => {
-        const box = document.createElement("div");
-        box.className = "stage-box";
-        box.innerHTML = `
-          <div class="stage-name">${stage}</div>
-          <div class="grid-2x2">
-            <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
-            <textarea placeholder="감정" id="${stage}-emotion"></textarea>
-            <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
-            <textarea placeholder="문제점" id="${stage}-pain"></textarea>
-          </div>
-          <button class="btn" onclick="generateInsight('${stage}')">Insight 생성</button>
-          <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
-          <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
-        `;
-        container.appendChild(box);
-      });
+    function loadDeal() {
+      const stored = localStorage.getItem("bada_deals");
+      if (!stored) return;
+      const dealList = JSON.parse(stored);
+      const found = dealList.find(d => d.id === dealId);
+      if (!found) return;
+      document.getElementById("dealNamePill").innerText = found.name;
+      document.getElementById("dealIdInfo").innerText = found.id;
+      document.getElementById("dealDesc").innerText = found.description || "(없음)";
     }
 
-    function generateInsight(stage) {
-      const behavior = document.getElementById(`${stage}-behavior`).value;
-      const emotion = document.getElementById(`${stage}-emotion`).value;
-      const channel = document.getElementById(`${stage}-channel`).value;
-      const pain = document.getElementById(`${stage}-pain`).value;
+    function generateInsight() {
+      const behavior = document.getElementById("behavior").value;
+      const emotion = document.getElementById("emotion").value;
+      const channel = document.getElementById("channel").value;
+      const pain = document.getElementById("pain").value;
+      const prompt = `고객 행동: ${behavior}\n감정: ${emotion}\n채널: ${channel}\n문제점: ${pain}\n→ 고객의 JTBD와 Seller To-Do를 제안하세요.`;
 
-      const prompt = `고객 여정 단계: ${stage}\n고객 행동: ${behavior}\n감정: ${emotion}\n채널: ${channel}\n문제점: ${pain}`;
-      // 여기에 Gemini 호출 함수 연결
-      alert("(데모) Insight 생성 요청:\n" + prompt);
+      // 데모용 로직
+      document.getElementById("jtbd").value = "고객의 JTBD는 ...이다.";
+      document.getElementById("todo").value = "- 첫 번째 할 일\n- 두 번째 할 일";
     }
 
-    window.addEventListener("DOMContentLoaded", renderStages);
+    window.addEventListener("DOMContentLoaded", loadDeal);
   </script>
 </body>
 </html>
