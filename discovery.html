@@ -255,25 +255,21 @@
       });
     }
 
-    async function callGemini(prompt) {
-      const apiKey = "YOUR_API_KEY_HERE";
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
-      const requestData = {
-        contents: [{ parts: [{ text: prompt }] }]
-      };
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestData),
-        });
-        const result = await response.json();
-        const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)";
-        return text.trim();
-      } catch (err) {
-        return "[오류 발생] " + err.message;
-      }
+    async function callGeminiViaGAS(prompt) {
+  const gasUrl = 'https://script.google.com/macros/s/AKfycbz5eg5E4664lvp6OL2qS-vUx7CoxpyPpuov3eRMxArZCFmTrhkPMQQGql-TyEX1fZJBeg/exec'; // 복사한 URL로 교체
+
+  const response = await fetch(gasUrl, {
+    method: 'POST',
+    body: JSON.stringify({ prompt }),
+    headers: {
+      'Content-Type': 'application/json'
     }
+  });
+
+  const result = await response.json();
+  const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과 없음";
+  return text;
+}
 
     function buildPrompt(stage) {
       const behavior = document.getElementById(`${stage}-behavior`).value;
