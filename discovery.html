@@ -1,223 +1,194 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>BADA – Discovery (BSA Framework)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BADA - Discovery</title>
   <style>
-    :root {
-      --bg-body: #f5f5f7;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f9fafb;
-      --border-subtle: #e5e7eb;
-      --border-strong: #d1d5db;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #3b82f6;
-      --accent-soft: rgba(59, 130, 246, 0.08);
-      --radius-lg: 14px;
-      --radius-md: 10px;
-      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-body);
-      color: var(--text-main);
-    }
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #f5f5f7;
+      color: #111827;
     }
     header {
+      background: #ffffff;
+      padding: 12px 24px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       position: sticky;
       top: 0;
-      z-index: 20;
-      backdrop-filter: blur(12px);
-      background: rgba(245, 245, 247, 0.9);
-      border-bottom: 1px solid rgba(209, 213, 219, 0.6);
+      z-index: 10;
     }
-    .header-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .logo-area {
+    .logo {
       display: flex;
       align-items: center;
       gap: 10px;
     }
     .logo-badge {
-      width: 32px;
-      height: 32px;
-      border-radius: 12px;
       background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .deal-info {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .container {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f9fafb;
-      font-weight: 700;
-      font-size: 16px;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+      flex-direction: row;
+      height: calc(100vh - 60px);
     }
-    .logo-text-main {
-      font-weight: 700;
-      font-size: 18px;
-    }
-    .logo-text-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      font-size: 12px;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.7);
-    }
-    .btn {
-      border: 0;
-      border-radius: 999px;
-      font-size: 13px;
-      padding: 6px 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      background: #111827;
-      color: #f9fafb;
-    }
-    .btn.secondary {
-      background: #ffffff;
-      color: #111827;
-      border: 1px solid var(--border-subtle);
-    }
-    .main-inner {
-      max-width: 1120px;
-      margin: 20px auto;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 24px;
-    }
-    .info-box, .input-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+    .left-panel {
+      width: 60%;
+      overflow-y: scroll;
       padding: 20px;
-      box-shadow: var(--shadow-soft);
+      border-right: 1px solid #e5e7eb;
     }
-    .info-box h2 {
+    .right-panel {
+      width: 40%;
+      padding: 20px;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h3 {
       margin-top: 0;
       font-size: 16px;
     }
-    .input-box h2 {
-      margin-bottom: 12px;
+    .card p {
+      font-size: 13px;
+      color: #6b7280;
     }
-    textarea {
+    textarea, input {
       width: 100%;
-      height: 80px;
-      margin-bottom: 10px;
       padding: 10px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 8px;
+      margin-bottom: 12px;
       font-size: 14px;
     }
-    .btn.insight {
+    button {
       background: #10b981;
-      margin-bottom: 12px;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f9fafb;
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="header-inner">
-        <div class="logo-area">
-          <div class="logo-badge">B</div>
-          <div class="logo-text">
-            <div class="logo-text-main">BADA Discovery</div>
-            <div class="logo-text-sub">BSA 프레임워크 입력</div>
-          </div>
-        </div>
-        <div class="header-right">
-          <div class="pill" id="dealNamePill">Loading...</div>
-          <button class="btn secondary" onclick="goBack()">← 목록으로</button>
-        </div>
+  <header>
+    <div class="logo">
+      <div class="logo-badge">BADA</div>
+      <div>
+        <div style="font-weight: bold;">Discovery</div>
+        <div style="font-size: 12px; color: #6b7280;">BSA Framework</div>
       </div>
-    </header>
-    <main>
-      <div class="main-inner">
-        <div class="info-box">
-          <h2>Deal 정보</h2>
-          <p><strong>ID:</strong> <span id="dealIdInfo">-</span></p>
-          <p><strong>설명:</strong> <span id="dealDesc">-</span></p>
-        </div>
-        <div class="input-box">
-          <h2>고객 여정 입력</h2>
-          <textarea placeholder="고객 행동" id="behavior"></textarea>
-          <textarea placeholder="고객 감정" id="emotion"></textarea>
-          <textarea placeholder="정보 채널" id="channel"></textarea>
-          <textarea placeholder="문제점" id="pain"></textarea>
-          <button class="btn insight" onclick="generateInsight()">💡 Insight 생성</button>
-          <textarea placeholder="고객의 JTBD" id="jtbd"></textarea>
-          <textarea placeholder="Seller To-Do" id="todo"></textarea>
-        </div>
+    </div>
+    <div class="deal-info" id="dealName">Deal 이름 불러오는 중...</div>
+  </header>
+  <div class="container">
+    <div class="left-panel">
+      <div class="card">
+        <h3>고객 행동</h3>
+        <p>인식~평가 단계 기준으로 핵심 행동만 적어주세요</p>
+        <textarea id="behavior"></textarea>
       </div>
-    </main>
+      <div class="card">
+        <h3>감정 / Pain</h3>
+        <p>고객이 느낀 불편함과 감정, 상황을 적어주세요</p>
+        <textarea id="emotion"></textarea>
+        <textarea id="pain"></textarea>
+      </div>
+      <div class="card">
+        <h3>Touchpoints</h3>
+        <p>고객이 접한 채널 또는 터치포인트를 적어주세요</p>
+        <textarea id="touchpoint"></textarea>
+      </div>
+      <div class="card">
+        <h3>JTBD 초안 + AI 보완</h3>
+        <textarea id="jtbd"></textarea>
+        <button onclick="generateJTBD()">AI 제안 받기</button>
+      </div>
+      <div class="card">
+        <h3>Seller To-Do</h3>
+        <textarea id="todo"></textarea>
+        <button onclick="generateToDo()">AI 제안 받기</button>
+      </div>
+    </div>
+    <div class="right-panel">
+      <h3>Discovery Summary</h3>
+      <p id="summary">입력한 정보를 기반으로 요약이 여기에 표시됩니다.</p>
+
+      <h3>JTBD 테이블</h3>
+      <table>
+        <thead>
+          <tr><th>단계</th><th>JTBD 요약</th></tr>
+        </thead>
+        <tbody id="jtbdTable">
+          <tr><td>인식</td><td>...</td></tr>
+          <tr><td>고려</td><td>...</td></tr>
+          <tr><td>평가</td><td>...</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Seller To-Do 요약</h3>
+      <ul id="todoList">
+        <li>인식: ...</li>
+        <li>고려: ...</li>
+        <li>평가: ...</li>
+      </ul>
+    </div>
   </div>
+
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const dealId = urlParams.get("dealId");
+    const dealId = new URLSearchParams(location.search).get("dealId");
+    const deals = JSON.parse(localStorage.getItem("bada_deals") || "[]");
+    const deal = deals.find(d => d.id === dealId);
+    if (deal) document.getElementById("dealName").textContent = deal.name;
 
-    function goBack() {
-      window.location.href = "index.html";
-    }
-
-    function loadDeal() {
-      const stored = localStorage.getItem("bada_deals");
-      if (!stored) return;
-      const dealList = JSON.parse(stored);
-      const found = dealList.find(d => d.id === dealId);
-      if (!found) return;
-      document.getElementById("dealNamePill").innerText = found.name;
-      document.getElementById("dealIdInfo").innerText = found.id;
-      document.getElementById("dealDesc").innerText = found.description || "(없음)";
-    }
-
-    function generateInsight() {
+    function generateJTBD() {
       const behavior = document.getElementById("behavior").value;
-      const emotion = document.getElementById("emotion").value;
-      const channel = document.getElementById("channel").value;
       const pain = document.getElementById("pain").value;
-      const prompt = `고객 행동: ${behavior}\n감정: ${emotion}\n채널: ${channel}\n문제점: ${pain}\n→ 고객의 JTBD와 Seller To-Do를 제안하세요.`;
-
-      // 데모용 로직
-      document.getElementById("jtbd").value = "고객의 JTBD는 ...이다.";
-      document.getElementById("todo").value = "- 첫 번째 할 일\n- 두 번째 할 일";
+      const jtbd = `고객은 ${behavior} 하는 과정에서 ${pain} 문제를 해결하고 싶어합니다.`;
+      document.getElementById("jtbd").value = jtbd;
     }
 
-    window.addEventListener("DOMContentLoaded", loadDeal);
+    function generateToDo() {
+      const emotion = document.getElementById("emotion").value;
+      const todo = `프리세일즈는 고객의 '${emotion}' 상태를 고려하여 신뢰 구축 및 우선순위 지원을 해야 합니다.`;
+      document.getElementById("todo").value = todo;
+    }
   </script>
 </body>
 </html>
