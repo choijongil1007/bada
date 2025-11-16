@@ -64,6 +64,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -80,62 +81,129 @@
   </div>
 
   <script>
-    const dealID = new URLSearchParams(window.location.search).get('dealId');
-    console.log('[DEBUG] dealId:', dealID);
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("DOMContentLoaded 실행됨");
 
-    const dealsRaw = localStorage.getItem('bada_deals');
-    const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
-    const dealData = deals[dealID];
-    window.dealData = dealData;
+      // ---------- Deal ID 로딩 ----------
+      const dealID = new URLSearchParams(window.location.search).get("dealId");
+      console.log("dealId:", dealID);
 
-    const dealInfoEl = document.getElementById('deal-info');
-    if (dealData?.meta) {
-      const m = dealData.meta;
-      dealInfoEl.innerHTML = `
-        <p><strong>Deal 이름:</strong> ${m.dealName || '(입력 없음)'}</p>
-        <p><strong>고객사:</strong> ${m.customerName || '(입력 없음)'}</p>
-        <p><strong>고객 담당자:</strong> ${m.buyerPersona || '(입력 없음)'}</p>
-        <p><strong>솔루션:</strong> ${m.solutionName || '(입력 없음)'}</p>
-        <p><strong>단계:</strong> ${m.stage || '(입력 없음)'}</p>
-        <p><strong>자사 담당자:</strong> ${m.ownerName || '(입력 없음)'}</p>
-        <p><strong>메모:</strong> ${m.note || '(입력 없음)'}</p>
-      `;
-    } else {
-      dealInfoEl.innerHTML = '<p>⚠️ Deal 정보를 불러올 수 없습니다.</p>';
-    }
+      const dealsRaw = localStorage.getItem("bada_deals");
+      const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
+      const dealData = deals[dealID];
+      window.dealData = dealData;
 
-    const phaseNames = ['인식', '고려', '평가', '구매'];
-    const questions = ['고객 행동', '고객 감정', '고객 접점', '고객 문제'];
+      const dealInfoEl = document.getElementById("deal-info");
 
-    const phasesEl = document.getElementById('phases');
-    phaseNames.forEach((phase, idx) => {
-      const section = document.createElement('div');
-      section.className = 'section';
+      // ---------- Deal Info 표시 ----------
+      if (dealData?.meta) {
+        const m = dealData.meta;
+        dealInfoEl.innerHTML = `
+          <p><strong>Deal 이름:</strong> ${m.dealName || "(입력 없음)"}</p>
+          <p><strong>고객사:</strong> ${m.customerName || "(입력 없음)"}</p>
+          <p><strong>고객 담당자:</strong> ${m.buyerPersona || "(입력 없음)"}</p>
+          <p><strong>솔루션:</strong> ${m.solutionName || "(입력 없음)"}</p>
+          <p><strong>단계:</strong> ${m.stage || "(입력 없음)"}</p>
+          <p><strong>자사 담당자:</strong> ${m.ownerName || "(입력 없음)"}</p>
+          <p><strong>메모:</strong> ${m.note || "(입력 없음)"}</p>
+        `;
+      } else {
+        dealInfoEl.innerHTML = "<p>⚠️ Deal 정보를 불러올 수 없습니다.</p>";
+      }
 
-      const header = document.createElement('div');
-      header.className = 'section-header';
-      header.innerText = phase;
-      header.onclick = () => {
-        content.style.display = content.style.display === 'none' ? 'block' : 'none';
-      };
+      // ---------- Discovery 단계 생성 ----------
+      const phaseNames = ["인식", "고려", "평가", "구매"];
+      const questions = ["고객 행동", "고객 감정", "고객 접점", "고객 문제"];
 
-      const content = document.createElement('div');
-      content.className = 'section-content';
-      if (idx === 0) content.style.display = 'block';
+      const phasesEl = document.getElementById("phases");
 
-      const inputs = {};
-      questions.forEach(q => {
-        const label = document.createElement('label');
-        label.innerText = q;
-        const textarea = document.createElement('textarea');
-        textarea.placeholder = `${phase} 단계의 ${q}`;
-        inputs[q] = textarea;
-        content.appendChild(label);
-        content.appendChild(textarea);
+      phaseNames.forEach((phase, idx) => {
+        const section = document.createElement("div");
+        section.className = "section";
+
+        const header = document.createElement("div");
+        header.className = "section-header";
+        header.innerText = phase;
+
+        const content = document.createElement("div");
+        content.className = "section-content";
+        if (idx === 0) content.style.display = "block";
+
+        header.onclick = () => {
+          content.style.display = content.style.display === "none" ? "block" : "none";
+        };
+
+        const inputs = {};
+
+        questions.forEach((q) => {
+          const label = document.createElement("label");
+          label.innerText = q;
+
+          const textarea = document.createElement("textarea");
+          textarea.placeholder = `${phase} 단계의 ${q}`;
+          inputs[q] = textarea;
+
+          content.appendChild(label);
+          content.appendChild(textarea);
+        });
+
+        const btn = document.createElement("button");
+        btn.innerText = "Insight 생성";
+        btn.onclick = async () => {
+          const inputText = questions.map((q) => `${q}: ${inputs[q].value}`).join("\n");
+          const prompt = `다음은 ${phase} 단계의 고객 정보입니다.\n${inputText}\n이 고객의 하려는 일(JTBD)과 To-Do를 작성해줘.`;
+
+          const response = await callGemini(prompt);
+
+          const jtbd = document.createElement("div");
+          jtbd.className = "output-box";
+          jtbd.innerText = `고객 JTBD:\n${response.jtbd}`;
+
+          const todo = document.createElement("div");
+          todo.className = "output-box";
+          todo.innerText = `판매자 To-Do:\n${response.todo}`;
+
+          content.appendChild(jtbd);
+          content.appendChild(todo);
+        };
+
+        content.appendChild(btn);
+        section.appendChild(header);
+        section.appendChild(content);
+        phasesEl.appendChild(section);
       });
 
-      const btn = document.createElement('button');
-      btn.innerText = 'Insight 생성';
-      btn.onclick = async () => {
-        const inputText = questions.map(q => `${q}: ${inputs[q].value}`).join('\n');
-        const prompt = `다음은 ${p
+      // ---------- Gemini API ----------
+      async function callGemini(prompt) {
+        const apiKey = "YOUR_GEMINI_API_KEY"; // 실제 키 입력
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+
+        const body = {
+          contents: [{ parts: [{ text: prompt }] }],
+        };
+
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+          const result = await res.json();
+          const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          const [jtbd, todo] = text.split("판매자 To-Do:");
+
+          return {
+            jtbd: jtbd?.replace("고객 JTBD:", "").trim() || "(JTBD 없음)",
+            todo: todo?.trim() || "(To-Do 없음)",
+          };
+        } catch (e) {
+          console.error("[Gemini 호출 오류]", e);
+          return { jtbd: "[오류 발생]", todo: "" };
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
