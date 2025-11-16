@@ -649,16 +649,16 @@
 
       // ======= LocalStorage 처리 =======
       function loadDealInfo(id) {
-        const raw = localStorage.getItem("bada_deals");
-        if (!raw) return null;
-        try {
-          const arr = JSON.parse(raw);
-          return arr.find((d) => String(d.id) === String(id));
-        } catch (e) {
-          console.error("bada_deals 파싱 실패:", e);
-          return null;
-        }
-      }
+  const raw = localStorage.getItem("bada_deals_v1");  // ← 여기 수정
+  if (!raw) return null;
+  try {
+    const arr = JSON.parse(raw);
+    return arr.find((d) => String(d.id) === String(id));
+  } catch (e) {
+    console.error("bada_deals_v1 파싱 실패:", e);
+    return null;
+  }
+}
 
       function loadDiscoveryData(id) {
         const raw = localStorage.getItem("bada_discovery_" + id);
