@@ -1,143 +1,174 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Discovery - BSA</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      height: 100vh;
-    }
-    .left-panel {
-      width: 30%;
-      background-color: #f0f4f8;
-      padding: 20px;
-      box-sizing: border-box;
-      border-right: 1px solid #ccc;
-    }
-    .right-panel {
-      width: 70%;
-      padding: 20px;
-      box-sizing: border-box;
-      overflow-y: auto;
-    }
-    .deal-info p {
-      margin: 5px 0;
-    }
-    .stage {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
-    .stage-header {
-      background-color: #e5e7eb;
-      padding: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .stage-body {
-      display: none;
-      padding: 15px;
-      background-color: #fff;
-    }
-    .field {
-      margin-bottom: 12px;
-    }
-    .field label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-    .field textarea {
-      width: 100%;
-      height: 60px;
-      padding: 8px;
-      resize: vertical;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .button {
-      background-color: #10B981;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .insight-box, .todo-box {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #f9fafb;
-      border: 1px dashed #ccc;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="left-panel">
-    <h2>Deal 정보</h2>
-    <div class="deal-info">
-      <p><strong>Deal 이름:</strong> Vault 도입 프로젝트</p>
-      <p><strong>고객사:</strong> ABC은행</p>
-      <p><strong>고객 담당자:</strong> 김보안 부장</p>
-      <p><strong>솔루션:</strong> Vault Enterprise</p>
-      <p><strong>현재 단계:</strong> 고려</p>
-      <p><strong>자사 담당자:</strong> 이프리세일즈 차장</p>
-    </div>
-  </div>
-  <div class="right-panel">
-    <h2>Discovery 입력</h2>
-
-    <div class="stage" id="stage-awareness">
-      <div class="stage-header" onclick="toggleStage('awareness')">인식 단계</div>
-      <div class="stage-body" id="awareness-body">
-        <div class="field">
-          <label>고객 행동</label>
-          <textarea id="awareness-behavior"></textarea>
-        </div>
-        <div class="field">
-          <label>고객 감정</label>
-          <textarea id="awareness-emotion"></textarea>
-        </div>
-        <div class="field">
-          <label>고객 접점</label>
-          <textarea id="awareness-touchpoint"></textarea>
-        </div>
-        <div class="field">
-          <label>고객 문제</label>
-          <textarea id="awareness-pain"></textarea>
-        </div>
-        <button class="button" onclick="generateInsights('awareness')">Insight 생성</button>
-        <div class="insight-box" id="awareness-jtbd">[고객의 JTBD]</div>
-        <div class="todo-box" id="awareness-todo">[판매자 To-Do]</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Discovery - BADA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f9fafb;
+        display: flex;
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+      }
+      .sidebar {
+        width: 25%;
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      }
+      .main {
+        width: 75%;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .section {
+        margin-bottom: 20px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background-color: #ffffff;
+      }
+      .section-header {
+        background-color: #f3f4f6;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 10px 10px 0 0;
+        font-weight: bold;
+      }
+      .section-content {
+        display: none;
+        padding: 15px;
+      }
+      textarea {
+        width: 100%;
+        height: 50px;
+        margin-bottom: 10px;
+        resize: vertical;
+      }
+      .output-box {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #ecfdf5;
+        border-left: 4px solid #10b981;
+      }
+      button {
+        background-color: #10b981;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar">
+        <h3>Deal 정보</h3>
+        <div id="deal-info"></div>
+      </div>
+      <div class="main">
+        <h2>Discovery 입력</h2>
+        <div id="phases"></div>
       </div>
     </div>
 
-    <!-- 고려, 평가, 구매 단계도 동일 구조로 복제해서 id만 바꾸면 됩니다 -->
-  </div>
+    <script>
+      const dealID = new URLSearchParams(window.location.search).get('deal');
+      const dealData = JSON.parse(localStorage.getItem('deals') || '{}')[dealID];
 
-  <script>
-    function toggleStage(stage) {
-      const body = document.getElementById(`${stage}-body`);
-      body.style.display = body.style.display === 'none' ? 'block' : 'none';
-    }
+      const phaseNames = ['인식', '고려', '평가', '구매'];
+      const questions = ['고객 행동', '고객 감정', '고객 접점', '고객 문제'];
 
-    function generateInsights(stage) {
-      const jtbd = `[${stage}] Gemini가 생성한 고객의 JTBD 예시입니다.`;
-      const todo = `[${stage}] Gemini가 생성한 판매자 To-Do 예시입니다.`;
-      document.getElementById(`${stage}-jtbd`).innerText = jtbd;
-      document.getElementById(`${stage}-todo`).innerText = todo;
-    }
+      document.getElementById('deal-info').innerHTML = dealData ? `
+        <p><strong>Deal 이름:</strong> ${dealData.name}</p>
+        <p><strong>고객사:</strong> ${dealData.customer}</p>
+        <p><strong>고객 담당자:</strong> ${dealData.persona}</p>
+        <p><strong>솔루션:</strong> ${dealData.solution}</p>
+        <p><strong>단계:</strong> ${dealData.stage}</p>
+        <p><strong>자사 담당자:</strong> ${dealData.owner}</p>
+        <p><strong>메모:</strong> ${dealData.memo}</p>
+      ` : '<p>Deal 정보를 불러올 수 없습니다.</p>';
 
-    // 초기에 인식 단계만 열기
-    window.onload = () => {
-      document.getElementById('awareness-body').style.display = 'block';
-    };
-  </script>
-</body>
+      const phasesEl = document.getElementById('phases');
+      phaseNames.forEach((phase, idx) => {
+        const section = document.createElement('div');
+        section.className = 'section';
+
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        header.innerText = phase;
+        header.onclick = () => {
+          content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        };
+
+        const content = document.createElement('div');
+        content.className = 'section-content';
+        if (idx === 0) content.style.display = 'block';
+
+        const inputs = {};
+        questions.forEach(q => {
+          const label = document.createElement('label');
+          label.innerText = q;
+          const textarea = document.createElement('textarea');
+          textarea.placeholder = `${phase} 단계의 ${q}`;
+          inputs[q] = textarea;
+          content.appendChild(label);
+          content.appendChild(textarea);
+        });
+
+        const btn = document.createElement('button');
+        btn.innerText = 'Insight 생성';
+        btn.onclick = async () => {
+          const inputText = questions.map(q => `${q}: ${inputs[q].value}`).join('\n');
+          const prompt = `다음은 ${phase} 단계의 고객 정보입니다.\n${inputText}\n이 고객의 하려는 일(JTBD)과 To-Do를 작성해줘.`;
+
+          const response = await callGemini(prompt);
+          const jtbd = document.createElement('div');
+          jtbd.className = 'output-box';
+          jtbd.innerText = `고객 JTBD:\n${response.jtbd}`;
+          const todo = document.createElement('div');
+          todo.className = 'output-box';
+          todo.innerText = `판매자 To-Do:\n${response.todo}`;
+          content.appendChild(jtbd);
+          content.appendChild(todo);
+        };
+        content.appendChild(btn);
+
+        section.appendChild(header);
+        section.appendChild(content);
+        phasesEl.appendChild(section);
+      });
+
+      async function callGemini(prompt) {
+        const apiKey = 'YOUR_GEMINI_API_KEY';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+        const body = {
+          contents: [{ parts: [{ text: prompt }] }]
+        };
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          const result = await res.json();
+          const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const [jtbd, todo] = text.split('판매자 To-Do:');
+          return {
+            jtbd: jtbd.replace('고객 JTBD:', '').trim(),
+            todo: todo?.trim() || '(To-Do 없음)'
+          };
+        } catch (e) {
+          return { jtbd: '[오류 발생]', todo: '' };
+        }
+      }
+    </script>
+  </body>
 </html>
