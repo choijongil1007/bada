@@ -19,194 +19,83 @@
         --radius-md: 10px;
         --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
       }
-
       * {
         box-sizing: border-box;
       }
-
       body {
         margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background: radial-gradient(circle at top left, #e0ecff, #f5f5f7);
         color: var(--text-main);
       }
-
-      .page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
+      .page { min-height: 100vh; display: flex; flex-direction: column; }
       header {
-        position: sticky;
-        top: 0;
-        z-index: 20;
+        position: sticky; top: 0; z-index: 20;
         backdrop-filter: blur(12px);
         background: rgba(245, 245, 247, 0.9);
         border-bottom: 1px solid rgba(209, 213, 219, 0.6);
       }
-
       .header-inner {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 10px 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        max-width: 1120px; margin: 0 auto; padding: 10px 16px;
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
       }
-
-      .logo-area {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
+      .logo-area { display: flex; align-items: center; gap: 10px; }
       .logo-badge {
-        width: 32px;
-        height: 32px;
-        border-radius: 12px;
+        width: 32px; height: 32px; border-radius: 12px;
         background: linear-gradient(135deg, #2563eb, #4f46e5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #f9fafb;
-        font-weight: 700;
-        font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+        color: #f9fafb; font-weight: 700; font-size: 16px;
         box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
       }
-
-      .logo-text-main {
-        font-weight: 700;
-        font-size: 18px;
-      }
-
-      .logo-text-sub {
-        font-size: 12px;
-        color: var(--text-muted);
-      }
-
-      .logo-text {
-        display: flex;
-        flex-direction: column;
-      }
-
+      .logo-text-main { font-weight: 700; font-size: 18px; }
+      .logo-text-sub { font-size: 12px; color: var(--text-muted); }
+      .logo-text { display: flex; flex-direction: column; }
       .header-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
+        display: flex; align-items: center; gap: 8px;
+        flex-wrap: wrap; justify-content: flex-end;
       }
-
       .pill {
-        padding: 4px 10px;
-        border-radius: 999px;
+        padding: 4px 10px; border-radius: 999px;
         border: 1px solid var(--border-subtle);
-        font-size: 12px;
-        color: var(--text-muted);
+        font-size: 12px; color: var(--text-muted);
         background: rgba(255, 255, 255, 0.7);
       }
-
       .btn {
-        border: 0;
-        border-radius: 999px;
-        font-size: 13px;
-        padding: 6px 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        background: #111827;
-        color: #f9fafb;
+        border: 0; border-radius: 999px; font-size: 13px;
+        padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px;
+        cursor: pointer; background: #111827; color: #f9fafb;
       }
-
       .btn.secondary {
-        background: #ffffff;
-        color: #111827;
+        background: #ffffff; color: #111827;
         border: 1px solid var(--border-subtle);
       }
-      .btn.ai {
-        background: #10b981;
-        color: white;
-      }
-
-      .btn span.icon {
-        font-size: 14px;
-      }
-
-      main {
-        flex: 1;
-      }
-
+      .btn.ai { background: #10b981; color: white; }
+      .btn span.icon { font-size: 14px; }
+      main { flex: 1; }
       .main-inner {
-        max-width: 1120px;
-        margin: 12px auto 40px;
-        padding: 0 16px 24px;
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.2fr);
+        max-width: 1120px; margin: 12px auto 40px; padding: 0 16px 24px;
+        display: grid; grid-template-columns: minmax(0, 1fr);
         gap: 18px;
       }
-
-      @media (max-width: 960px) {
-        .main-inner {
-          grid-template-columns: minmax(0, 1fr);
-        }
-      }
-      .section-title {
-        font-weight: 600;
-        font-size: 18px;
-        margin: 20px 0 10px;
-      }
-
-      textarea,
-      input {
-        width: 100%;
-        font-size: 14px;
-        padding: 10px;
-        margin-bottom: 10px;
+      .section-title { font-weight: 600; font-size: 18px; margin: 20px 0 10px; }
+      textarea, input {
+        width: 100%; font-size: 14px; padding: 10px; margin-bottom: 10px;
         border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        background: #fff;
-        color: var(--text-main);
+        border-radius: var(--radius-md); background: #fff; color: var(--text-main);
       }
-
       .stage-box {
-        margin-bottom: 30px;
-        background: var(--bg-subtle);
-        padding: 16px;
-        border-radius: var(--radius-lg);
+        margin-bottom: 30px; background: var(--bg-subtle);
+        padding: 16px; border-radius: var(--radius-lg);
         box-shadow: var(--shadow-soft);
         border: 1px solid var(--border-subtle);
       }
-
-      .stage-name {
-        font-weight: bold;
-        margin-bottom: 8px;
-        font-size: 16px;
-        color: #2563eb;
-      }
-
-      .ai-buttons {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-
-      .ai-buttons button {
-        flex: 1;
-      }
-
-      footer {
-        padding: 20px;
-        font-size: 13px;
-        color: var(--text-muted);
-        text-align: center;
+      .stage-name { font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #2563eb; }
+      .grid-2x2 {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
     </style>
   </head>
-
   <body>
     <div class="page">
       <header>
@@ -224,7 +113,6 @@
           </div>
         </div>
       </header>
-
       <main>
         <div class="main-inner">
           <div>
@@ -233,141 +121,70 @@
           </div>
         </div>
       </main>
-
-      <footer>
-        &copy; 2025 BADA Framework · Powered by PreSales Lab
-      </footer>
-
-      <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const dealId = urlParams.get("dealId");
-        let dealData = {};
-        let dealList = [];
-
-        function goBack() {
-          window.location.href = "index.html";
-        }
-
-        function loadDeal() {
-          const stored = localStorage.getItem("bada_deals_v1");
-          if (!stored) return;
-
-          dealList = JSON.parse(stored);
-          const found = dealList.find((d) => d.id === dealId);
-          if (!found) return;
-
-          dealData = found;
-          document.getElementById("dealNamePill").innerText = found.name;
-        }
-
-        const journeyStages = [
-          "Awareness",
-          "Consideration",
-          "Evaluation",
-          "Purchase",
-          "Onboarding",
-          "Adoption & Retention",
-          "Expansion",
-          "Renewal",
-        ];
-
-        function renderStages() {
-          const container = document.getElementById("stages");
-          journeyStages.forEach((stage) => {
-            const box = document.createElement("div");
-            box.className = "stage-box";
-
-            box.innerHTML = `
-              <div class="stage-name">${stage}</div>
+      <footer>&copy; 2025 BADA Framework · Powered by PreSales Lab</footer>
+    </div>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const dealId = urlParams.get("dealId");
+      const journeyStages = ["Awareness", "Consideration", "Evaluation", "Purchase", "Onboarding", "Adoption & Retention", "Expansion", "Renewal"];
+      function goBack() { window.location.href = "index.html"; }
+      function loadDeal() {
+        const stored = localStorage.getItem("bada_deals_v1");
+        if (!stored) return;
+        const dealList = JSON.parse(stored);
+        const found = dealList.find((d) => d.id === dealId);
+        if (!found) return;
+        document.getElementById("dealNamePill").innerText = found.name;
+      }
+      function renderStages() {
+        const container = document.getElementById("stages");
+        journeyStages.forEach((stage) => {
+          const box = document.createElement("div");
+          box.className = "stage-box";
+          box.innerHTML = `
+            <div class="stage-name">${stage}</div>
+            <div class="grid-2x2">
               <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
               <textarea placeholder="고객 감정" id="${stage}-emotion"></textarea>
               <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
               <textarea placeholder="문제점" id="${stage}-pain"></textarea>
-
-              <div class="ai-buttons">
-                <button class="btn ai" onclick="generateJTBD('${stage}')">🎯 JTBD 생성</button>
-                <button class="btn ai" onclick="generateToDo('${stage}')">📝 To-Do 생성</button>
-              </div>
-
-              <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
-              <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
-            `;
-            container.appendChild(box);
-          });
-        }
-        async function callGemini(prompt) {
-          const apiKey = "AIzaSyDviJtU50t657K1eV0mTVwqrBJzGqAlrnM"; // 여기에 Gemini API 키 입력
-          const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey;
-
-          const requestData = {
-            contents: [
-              {
-                parts: [{ text: prompt }],
-              },
-            ],
-          };
-
-          try {
-            const response = await fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(requestData),
-            });
-
-            const result = await response.json();
-            const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)";
-            return text.trim();
-          } catch (err) {
-            return "[오류 발생] " + err.message;
-          }
-        }
-
-        function buildPrompt(stage) {
-          const behavior = document.getElementById(`${stage}-behavior`).value;
-          const emotion = document.getElementById(`${stage}-emotion`).value;
-          const channel = document.getElementById(`${stage}-channel`).value;
-          const pain = document.getElementById(`${stage}-pain`).value;
-
-          return `
-당신은 B2B 고객 여정 전략가입니다.
-아래 고객 정보를 바탕으로 고객의 JTBD를 생성하세요.
-
-[고객 여정 단계] ${stage}
-[고객 행동] ${behavior}
-[감정] ${emotion}
-[정보 채널] ${channel}
-[문제점] ${pain}
-
-결과는 '고객의 JTBD는 ~이다.' 형태로 간결하게 작성하세요.
-          `.trim();
-        }
-
-        async function generateJTBD(stage) {
-          const prompt = buildPrompt(stage);
-          const result = await callGemini(prompt);
-          document.getElementById(`${stage}-jtbd`).value = result;
-        }
-
-        async function generateToDo(stage) {
-          const jtbd = document.getElementById(`${stage}-jtbd`).value;
-          const prompt = `
-고객의 JTBD가 다음과 같을 때,
-프리세일즈 담당자가 해야 할 주요 행동을 'Seller To-Do' 형식으로 정리하세요.
-
-[JTBD] ${jtbd}
-          `.trim();
-
-          const result = await callGemini(prompt);
-          document.getElementById(`${stage}-todo`).value = result;
-        }
-
-        window.addEventListener("DOMContentLoaded", () => {
-          loadDeal();
-          renderStages();
+            </div>
+            <button class="btn ai" onclick="generateInsights('${stage}')">💡 Insight 생성</button>
+            <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
+            <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
+          `;
+          container.appendChild(box);
         });
-      </script>
-    </div>
+      }
+      async function callGemini(prompt) {
+        const apiKey = "YOUR_API_KEY_HERE";
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        });
+        const result = await response.json();
+        return result.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)";
+      }
+      function buildPrompt(stage) {
+        const behavior = document.getElementById(`${stage}-behavior`).value;
+        const emotion = document.getElementById(`${stage}-emotion`).value;
+        const channel = document.getElementById(`${stage}-channel`).value;
+        const pain = document.getElementById(`${stage}-pain`).value;
+        return `당신은 B2B 고객 여정 전략가입니다.\n아래 고객 정보를 바탕으로 고객의 JTBD와 Seller To-Do를 생성하세요.\n\n[고객 여정 단계] ${stage}\n[고객 행동] ${behavior}\n[감정] ${emotion}\n[정보 채널] ${channel}\n[문제점] ${pain}`;
+      }
+      async function generateInsights(stage) {
+        const prompt = buildPrompt(stage);
+        const result = await callGemini(prompt);
+        const [jtbd, todo] = result.split(/\n\n|---|\nJTBD[:：]?|To-Do[:：]?/).filter(Boolean);
+        document.getElementById(`${stage}-jtbd`).value = jtbd?.trim() || "";
+        document.getElementById(`${stage}-todo`).value = todo?.trim() || "";
+      }
+      window.addEventListener("DOMContentLoaded", () => {
+        loadDeal();
+        renderStages();
+      });
+    </script>
   </body>
 </html>
