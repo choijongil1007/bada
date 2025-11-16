@@ -1,49 +1,49 @@
-<!-- 중간 생략 없이 전체 수정 반영본입니다 -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <title>BADA – Discovery (BSA Framework)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    /* [스타일 코드는 그대로 유지됨 - 생략 가능] */
-    /* ... 스타일 전체는 생략 가능 (질문에서와 동일하므로) ... */
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="page">
+  <div class="app-shell">
     <header>
       <div class="header-inner">
-        <div class="logo-area">
-          <div class="logo-badge">B</div>
-          <div class="logo-text">
-            <div class="logo-text-main">BADA Discovery</div>
-            <div class="logo-text-sub">BSA 프레임워크 입력</div>
+        <div class="brand">
+          <div class="brand-logo">B</div>
+          <div>
+            <div class="brand-text-main">BADA Discovery</div>
+            <div class="brand-text-sub">BSA 프레임워크 기반 고객 여정 입력</div>
           </div>
-        </div>
-        <div class="header-right">
-          <div id="dealNamePill" class="pill">Loading Deal...</div>
-          <button class="btn secondary" onclick="goBack()">← 목록으로</button>
         </div>
       </div>
     </header>
+
     <main>
-      <div class="main-inner">
-        <div>
-          <div class="section-title">고객 여정 단계별 입력</div>
+      <div class="content-inner">
+        <section class="panel" style="width:100%">
+          <div class="panel-header">
+            <h2 class="panel-title">고객 여정 단계별 입력</h2>
+            <p class="panel-subtitle">Insight 기반 Discovery 내용을 입력하고 생성해보세요.</p>
+          </div>
+          <div id="dealNamePill" class="badge">Loading Deal...</div>
           <div id="stages"></div>
-        </div>
+        </section>
       </div>
     </main>
+
     <footer>
-      &copy; 2025 BADA Framework · Powered by PreSales Lab
+      <div style="text-align:center; font-size:12px; padding:20px; color:var(--text-muted);">
+        &copy; 2025 BADA Framework · Powered by PreSales Lab
+      </div>
     </footer>
   </div>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const dealId = urlParams.get("dealId");
     let dealData = {};
-    let dealList = []; // 전역 변수
 
     function goBack() {
       window.location.href = "index.html";
@@ -51,30 +51,21 @@
 
     function loadDeal() {
       const stored = localStorage.getItem("bada_deals");
-      if (!stored) {
-        console.warn("❗로컬스토리지에 'bada_deals' 값이 없습니다.");
-        return;
-      }
+      if (!stored) return;
 
+      let dealList = {};
       try {
-        dealList = JSON.parse(stored); // 이중 선언 제거
-        if (!Array.isArray(dealList)) {
-          console.error("❗ 'bada_deals' 값이 배열이 아닙니다:", dealList);
-          return;
-        }
-      } catch (err) {
-        console.error("❗ JSON 파싱 중 오류 발생:", err);
+        dealList = JSON.parse(stored);
+      } catch (e) {
+        console.error("JSON 파싱 오류", e);
         return;
       }
 
-      const found = dealList.find((d) => d.id === dealId);
-      if (!found) {
-        console.warn("❗ 해당 dealId를 가진 데이터를 찾을 수 없습니다:", dealId);
-        return;
-      }
+      const found = dealList[dealId];
+      if (!found) return;
 
       dealData = found;
-      document.getElementById("dealNamePill").innerText = found.name;
+      document.getElementById("dealNamePill").innerText = found.meta?.dealName || "Deal 정보 없음";
     }
 
     const journeyStages = [
@@ -89,12 +80,14 @@
         box.className = "stage-box";
         box.innerHTML = `
           <div class="stage-name">${stage}</div>
-          <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
-          <textarea placeholder="고객 감정" id="${stage}-emotion"></textarea>
-          <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
-          <textarea placeholder="문제점" id="${stage}-pain"></textarea>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
+            <textarea placeholder="고객 감정" id="${stage}-emotion"></textarea>
+            <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
+            <textarea placeholder="문제점" id="${stage}-pain"></textarea>
+          </div>
           <div class="ai-buttons">
-            <button class="btn ai" onclick="generateJTBDAndToDo('${stage}')">💡 Insight 생성</button>
+            <button class="btn-primary" onclick="generateJTBDAndToDo('${stage}')">💡 Insight 생성</button>
           </div>
           <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
           <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
@@ -104,8 +97,7 @@
     }
 
     async function callGeminiViaGAS(prompt) {
-      const gasUrl = 'https://script.google.com/macros/s/AKfycbz5eg5E4664lvp6OL2qS-vUx7CoxpyPpuov3eRMxArZCFmTrhkPMQQGql-TyEX1fZJBeg/exec'; // 실제 배포 URL 사용
-
+      const gasUrl = 'https://script.google.com/macros/s/AKfycbz5eg5E4664lvp6OL2qS-vUx7CoxpyPpuov3eRMxArZCFmTrhkPMQQGql-TyEX1fZJBeg/exec';
       const response = await fetch(gasUrl, {
         method: 'POST',
         body: JSON.stringify({ prompt }),
@@ -113,7 +105,6 @@
           'Content-Type': 'application/json'
         }
       });
-
       const result = await response.json();
       const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과 없음";
       return text;
@@ -144,7 +135,7 @@ Seller To-Do:
 
     async function generateJTBDAndToDo(stage) {
       const prompt = buildPrompt(stage);
-      const result = await callGeminiViaGAS(prompt); // 함수명 정확히 수정
+      const result = await callGeminiViaGAS(prompt);
       const [jtbdLine, ...todoLines] = result.split("\n").filter(line => line.trim() !== "");
       document.getElementById(`${stage}-jtbd`).value = jtbdLine || "";
       document.getElementById(`${stage}-todo`).value = todoLines.join("\n");
