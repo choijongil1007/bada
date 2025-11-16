@@ -865,4 +865,26 @@ ${inputText}
 
       phaseNames.forEach((phase) => {
         questions.forEach((q) => {
-          const key = `${phase}_${q}
+          const key = `${phase}_${q}`;
+          if (dealData.discovery[key] && dealData.discovery[key].trim()) {
+            filledFields++;
+          }
+        });
+
+        // JTBD와 Todo 체크
+        const jtbdKey = `${phase}_jtbd`;
+        const todoKey = `${phase}_todo`;
+        if (dealData.discovery[jtbdKey] && dealData.discovery[jtbdKey].trim()) {
+          filledFields++;
+        }
+        if (dealData.discovery[todoKey] && dealData.discovery[todoKey].trim()) {
+          filledFields++;
+        }
+      });
+
+      const percentage = Math.round((filledFields / totalFields) * 100);
+      document.getElementById("progress-fill").style.width = `${percentage}%`;
+    }
+  </script>
+</body>
+</html}
