@@ -4,42 +4,131 @@
   <meta charset="UTF-8" />
   <title>BADA – Discovery (BSA Framework)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      background-color: #f5f5f7;
+      color: #111827;
+    }
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      background-color: #2563eb;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .logo-text span:first-child {
+      font-weight: 600;
+    }
+    .logo-text span:last-child {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .btn-secondary {
+      background-color: white;
+      border: 1px solid #d1d5db;
+      color: #111827;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+    .main {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+    .stage-box {
+      background-color: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .stage-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2563eb;
+    }
+    .grid-2x2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    .btn-ai {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-shell">
-    <header>
-      <div class="header-inner">
-        <div class="brand">
-          <div class="brand-logo">B</div>
-          <div>
-            <div class="brand-text-main">BADA Discovery</div>
-            <div class="brand-text-sub">BSA 프레임워크 기반 고객 여정 입력</div>
-          </div>
-        </div>
+  <header>
+    <div class="header-left">
+      <div class="logo">B</div>
+      <div class="logo-text">
+        <span>BADA Discovery</span>
+        <span>BSA 프레임워크 입력</span>
       </div>
-    </header>
-
-    <main>
-      <div class="content-inner">
-        <section class="panel" style="width:100%">
-          <div class="panel-header">
-            <h2 class="panel-title">고객 여정 단계별 입력</h2>
-            <p class="panel-subtitle">Insight 기반 Discovery 내용을 입력하고 생성해보세요.</p>
-          </div>
-          <div id="dealNamePill" class="badge">Loading Deal...</div>
-          <div id="stages"></div>
-        </section>
-      </div>
-    </main>
-
-    <footer>
-      <div style="text-align:center; font-size:12px; padding:20px; color:var(--text-muted);">
-        &copy; 2025 BADA Framework · Powered by PreSales Lab
-      </div>
-    </footer>
-  </div>
-
+    </div>
+    <div>
+      <span id="dealNamePill">Loading...</span>
+      <button class="btn-secondary" onclick="goBack()">← 목록으로</button>
+    </div>
+  </header>
+  <main class="main">
+    <div id="stages"></div>
+  </main>
+  <footer>&copy; 2025 BADA Framework · Powered by PreSales Lab</footer>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const dealId = urlParams.get("dealId");
@@ -52,52 +141,39 @@
     function loadDeal() {
       const stored = localStorage.getItem("bada_deals");
       if (!stored) return;
-
-      let dealList = {};
-      try {
-        dealList = JSON.parse(stored);
-      } catch (e) {
-        console.error("JSON 파싱 오류", e);
-        return;
-      }
-
-      const found = dealList[dealId];
+      let dealList = JSON.parse(stored);
+      if (!Array.isArray(dealList)) return;
+      const found = dealList.find((d) => d.id === dealId);
       if (!found) return;
-
       dealData = found;
-      document.getElementById("dealNamePill").innerText = found.meta?.dealName || "Deal 정보 없음";
+      document.getElementById("dealNamePill").innerText = found.name;
     }
 
-    const journeyStages = [
-      "Awareness", "Consideration", "Evaluation", "Purchase",
-      "Onboarding", "Adoption & Retention", "Expansion", "Renewal"
-    ];
+    const journeyStages = ["Awareness", "Consideration", "Evaluation", "Purchase", "Onboarding", "Adoption & Retention", "Expansion", "Renewal"];
 
     function renderStages() {
       const container = document.getElementById("stages");
-      journeyStages.forEach((stage) => {
+      journeyStages.forEach(stage => {
         const box = document.createElement("div");
         box.className = "stage-box";
         box.innerHTML = `
           <div class="stage-name">${stage}</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-            <textarea placeholder="고객 행동" id="${stage}-behavior"></textarea>
-            <textarea placeholder="고객 감정" id="${stage}-emotion"></textarea>
-            <textarea placeholder="정보 채널" id="${stage}-channel"></textarea>
-            <textarea placeholder="문제점" id="${stage}-pain"></textarea>
+          <div class="grid-2x2">
+            <textarea id="${stage}-behavior" placeholder="고객 행동"></textarea>
+            <textarea id="${stage}-emotion" placeholder="고객 감정"></textarea>
+            <textarea id="${stage}-channel" placeholder="정보 채널"></textarea>
+            <textarea id="${stage}-pain" placeholder="문제점"></textarea>
           </div>
-          <div class="ai-buttons">
-            <button class="btn-primary" onclick="generateJTBDAndToDo('${stage}')">💡 Insight 생성</button>
-          </div>
-          <textarea placeholder="JTBD" id="${stage}-jtbd"></textarea>
-          <textarea placeholder="Seller To-Do" id="${stage}-todo"></textarea>
+          <button class="btn-ai" onclick="generateJTBDAndToDo('${stage}')">💡 Insight 생성</button>
+          <textarea id="${stage}-jtbd" placeholder="JTBD"></textarea>
+          <textarea id="${stage}-todo" placeholder="Seller To-Do"></textarea>
         `;
         container.appendChild(box);
       });
     }
 
     async function callGeminiViaGAS(prompt) {
-      const gasUrl = 'https://script.google.com/macros/s/AKfycbz5eg5E4664lvp6OL2qS-vUx7CoxpyPpuov3eRMxArZCFmTrhkPMQQGql-TyEX1fZJBeg/exec';
+      const gasUrl = 'YOUR_GAS_DEPLOYMENT_URL';
       const response = await fetch(gasUrl, {
         method: 'POST',
         body: JSON.stringify({ prompt }),
@@ -106,8 +182,7 @@
         }
       });
       const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과 없음";
-      return text;
+      return result.candidates?.[0]?.content?.parts?.[0]?.text || "결과 없음";
     }
 
     function buildPrompt(stage) {
@@ -130,7 +205,7 @@
 Seller To-Do:
 - ~
 - ~
-`;
+      `;
     }
 
     async function generateJTBDAndToDo(stage) {
