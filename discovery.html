@@ -754,20 +754,20 @@ function loadDealInfo(id) {
 
       // ======= UI 렌더링 =======
       function renderDealSummary(deal) {
-        const dealNameEl = document.getElementById("deal-name");
-        const dealCustomerEl = document.getElementById("deal-customer");
-        const dealOwnerEl = document.getElementById("deal-owner");
-        const dealIdEl = document.getElementById("deal-id");
-        const dealNoteEl = document.getElementById("deal-note");
-        const pillEl = document.getElementById("current-deal-pill");
+  const dealNameEl = document.getElementById("deal-name");
+  const dealCustomerEl = document.getElementById("deal-customer");
+  const dealOwnerEl = document.getElementById("deal-owner");
+  const dealIdEl = document.getElementById("deal-id");
+  const dealNoteEl = document.getElementById("deal-note");
+  const pillEl = document.getElementById("current-deal-pill");
 
-        dealNameEl.textContent = deal?.name || "(제목 없는 Deal)";
-        dealCustomerEl.textContent = deal?.customer || "-";
-        dealOwnerEl.textContent = deal?.owner || "-";
-        dealIdEl.textContent = dealId || "-";
-        dealNoteEl.textContent = deal?.note || "-";
-        pillEl.textContent = "Deal: " + (deal?.name || "-");
-      }
+  dealNameEl.textContent = deal?.dealName || "(제목 없는 Deal)";
+  dealCustomerEl.textContent = deal?.customerName || "-";
+  dealOwnerEl.textContent = deal?.ownerName || "-";
+  dealIdEl.textContent = deal?.dealId || "-";
+  dealNoteEl.textContent = deal?.note || "-";
+  pillEl.textContent = "Deal: " + (deal?.dealName || "-");
+}
 
       function renderStageNav() {
         const navEl = document.getElementById("stage-nav");
