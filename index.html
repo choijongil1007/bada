@@ -210,7 +210,7 @@
       .btn-primary {
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, #111111, #000000);
+  background: linear-gradient(135deg, #34d399, #10b981); /* 밝은→진한 에메랄드 */
   color: white;
   font-size: 13px;
   font-weight: 600;
@@ -221,10 +221,22 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  transition: transform 0.12s ease, box-shadow 0.12s ease,
-    background 0.12s ease;
+
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #10b981, #059669); /* 조금 더 진한 톤 */
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(5, 150, 105, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+}
+
 
       .btn-primary:hover {
         transform: translateY(-1px);
