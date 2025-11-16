@@ -173,7 +173,7 @@
     }
 
     async function callGeminiViaGAS(prompt) {
-      const gasUrl = 'YOUR_GAS_DEPLOYMENT_URL';
+      const gasUrl = 'https://script.google.com/macros/s/AKfycbz5eg5E4664lvp6OL2qS-vUx7CoxpyPpuov3eRMxArZCFmTrhkPMQQGql-TyEX1fZJBeg/exec';
       const response = await fetch(gasUrl, {
         method: 'POST',
         body: JSON.stringify({ prompt }),
