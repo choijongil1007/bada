@@ -80,7 +80,7 @@
     </div>
 
     <script>
-      const dealID = new URLSearchParams(window.location.search).get('deal');
+      const dealID = new URLSearchParams(window.location.search).get('dealId');
       const dealData = JSON.parse(localStorage.getItem('deals') || '{}')[dealID];
 
       const phaseNames = ['인식', '고려', '평가', '구매'];
