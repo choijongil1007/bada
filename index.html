@@ -546,84 +546,53 @@
             </div>
 
             <form id="deal-form">
-              <div class="field-group">
-                <label for="dealName">
-                  Deal 이름<span class="required">*</span>
-                </label>
-                <input
-                  id="dealName"
-                  type="text"
-                  placeholder="예: 돌고래은행 클라우드 도입"
-                  required
-                />
-              </div>
+  <div class="field-group">
+    <label for="dealName">Deal 이름<span class="required">*</span></label>
+    <input id="dealName" type="text" placeholder="예: 돌고래은행 클라우드 도입" required />
+  </div>
 
-              <div class="field-group">
-                <div>
-                  <label for="customerName">고객사</label>
-                  <input
-                    id="customerName"
-                    type="text"
-                    placeholder="예: 돌고래은행"
-                  />
-                </div>
-                <div>
-                  <label for="buyerPersona">고객 담당자</label>
-                  <input
-                    id="buyerPersona"
-                    type="text"
-                    placeholder="예: CIO, 보안팀장"
-                  />
-                </div>
-              </div>
+  <div class="field-group">
+    <label for="customerName">고객사</label>
+    <input id="customerName" type="text" placeholder="예: 돌고래은행" />
+  </div>
 
-              <div class="field-group">
-                <div>
-                  <label for="solutionName">솔루션 / 제안 대상</label>
-                  <input
-                    id="solutionName"
-                    type="text"
-                    placeholder="예: AWS EC2"
-                  />
-                </div>
-                <div>
-                  <label for="dealStage">현재 단계</label>
-                  <select id="dealStage">
-                    <option value="Discovery" selected>Discovery</option>
-                    <option value="Consideration">Consideration</option>
-                    <option value="Evaluation">Evaluation</option>
-                    <option value="Proposal">Proposal</option>
-                    <option value="PoC">PoC</option>
-                    <option value="Closing">Closing</option>
-                  </select>
-                </div>
-              </div>
+  <div class="field-group">
+    <label for="buyerPersona">고객 담당자</label>
+    <input id="buyerPersona" type="text" placeholder="예: CIO, 보안팀장" />
+  </div>
 
-              <div class="field-group">
-                <div>
-                  <label for="ownerName">자사 담당자</label>
-                  <input
-                    id="ownerName"
-                    type="text"
-                    placeholder="예: 홍길동"
-                  />
-                </div>
-                <div>
-                  <label for="salesRegion">메모 (선택)</label>
-                  <input
-                    id="salesRegion"
-                    type="text"
-                    placeholder="예: 금융 / 국내, PoC 예정"
-                  />
-                </div>
-              </div>
+  <div class="field-group">
+    <label for="solutionName">솔루션 / 제안 대상</label>
+    <input id="solutionName" type="text" placeholder="예: AWS EC2" />
+  </div>
 
-              <button type="submit" class="btn-primary">
-                <span class="btn-primary-icon">＋</span>
-                <span>Deal 생성</span>
-              </button>
+  <div class="field-group">
+    <label for="dealStage">현재 단계</label>
+    <select id="dealStage">
+      <option value="Discovery" selected>Discovery</option>
+      <option value="Consideration">Consideration</option>
+      <option value="Evaluation">Evaluation</option>
+      <option value="Proposal">Proposal</option>
+      <option value="PoC">PoC</option>
+      <option value="Closing">Closing</option>
+    </select>
+  </div>
 
-            </form>
+  <div class="field-group">
+    <label for="ownerName">자사 담당자</label>
+    <input id="ownerName" type="text" placeholder="예: 홍길동" />
+  </div>
+
+  <div class="field-group">
+    <label for="salesRegion">메모 (선택)</label>
+    <input id="salesRegion" type="text" placeholder="예: 금융/국내, PoC 예정" />
+  </div>
+
+  <button type="submit" class="btn-primary">
+    <span class="btn-primary-icon">＋</span>
+    <span>Deal 생성</span>
+  </button>
+</form>
           </section>
 
           <!-- Right: Deal 리스트 패널 -->
