@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BADA - Discovery</title>
+  <meta charset="UTF-8" />
+  <title>BADA – Discovery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg-body: #f5f5f7;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f9fafb;
+      --border-subtle: #e5e7eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #10b981;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f7;
-      color: #111827;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
-      background: #ffffff;
-      padding: 12px 24px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -28,167 +48,177 @@
       gap: 10px;
     }
     .logo-badge {
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
-      color: #fff;
+      background: #2563eb;
+      color: white;
       font-weight: bold;
-      padding: 6px 12px;
       border-radius: 8px;
-    }
-    .deal-info {
-      font-size: 14px;
-      color: #6b7280;
-    }
-    .container {
-      display: flex;
-      flex-direction: row;
-      height: calc(100vh - 60px);
-    }
-    .left-panel {
-      width: 60%;
-      overflow-y: scroll;
-      padding: 20px;
-      border-right: 1px solid #e5e7eb;
-    }
-    .right-panel {
-      width: 40%;
-      padding: 20px;
-      position: sticky;
-      top: 60px;
-      height: calc(100vh - 60px);
-      overflow-y: auto;
-    }
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .card h3 {
-      margin-top: 0;
+      padding: 6px 10px;
       font-size: 16px;
     }
-    .card p {
-      font-size: 13px;
-      color: #6b7280;
+    .deal-pill {
+      font-size: 14px;
+      padding: 4px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      background: var(--bg-subtle);
+      color: var(--text-muted);
     }
-    textarea, input {
+    .main {
+      display: flex;
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+      gap: 24px;
+    }
+    .left-box, .right-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+    .left-box {
+      flex: 1;
+    }
+    .right-box {
+      flex: 2;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    textarea {
       width: 100%;
+      height: 80px;
       padding: 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 8px;
-      margin-bottom: 12px;
       font-size: 14px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      resize: vertical;
     }
-    button {
-      background: #10b981;
+    .btn {
+      background: var(--accent);
       color: white;
+      padding: 10px 20px;
       border: none;
-      padding: 8px 16px;
       border-radius: 8px;
-      cursor: pointer;
       font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 20px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 16px;
+    .insight-box {
+      background: var(--bg-subtle);
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
     }
-    th, td {
-      border: 1px solid #e5e7eb;
-      padding: 8px;
-      text-align: left;
+    .insight-box h4 {
+      margin-top: 0;
+      font-size: 16px;
+      margin-bottom: 8px;
     }
-    th {
-      background-color: #f9fafb;
+    .insight-box pre {
+      white-space: pre-wrap;
+      font-size: 14px;
+      color: var(--text-main);
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <div class="logo-badge">BADA</div>
-      <div>
-        <div style="font-weight: bold;">Discovery</div>
-        <div style="font-size: 12px; color: #6b7280;">BSA Framework</div>
+  <div class="page">
+    <header>
+      <div class="logo">
+        <div class="logo-badge">B</div>
+        <div><strong>BADA Discovery</strong></div>
       </div>
-    </div>
-    <div class="deal-info" id="dealName">Deal 이름 불러오는 중...</div>
-  </header>
-  <div class="container">
-    <div class="left-panel">
-      <div class="card">
-        <h3>고객 행동</h3>
-        <p>인식~평가 단계 기준으로 핵심 행동만 적어주세요</p>
-        <textarea id="behavior"></textarea>
+      <div id="dealInfo" class="deal-pill">Loading deal...</div>
+    </header>
+    <div class="main">
+      <div class="left-box">
+        <div class="section-title">Deal 정보</div>
+        <div><strong>이름:</strong> <span id="dealName">-</span></div>
+        <div><strong>설명:</strong> <span id="dealDesc">-</span></div>
       </div>
-      <div class="card">
-        <h3>감정 / Pain</h3>
-        <p>고객이 느낀 불편함과 감정, 상황을 적어주세요</p>
-        <textarea id="emotion"></textarea>
-        <textarea id="pain"></textarea>
-      </div>
-      <div class="card">
-        <h3>Touchpoints</h3>
-        <p>고객이 접한 채널 또는 터치포인트를 적어주세요</p>
-        <textarea id="touchpoint"></textarea>
-      </div>
-      <div class="card">
-        <h3>JTBD 초안 + AI 보완</h3>
-        <textarea id="jtbd"></textarea>
-        <button onclick="generateJTBD()">AI 제안 받기</button>
-      </div>
-      <div class="card">
-        <h3>Seller To-Do</h3>
-        <textarea id="todo"></textarea>
-        <button onclick="generateToDo()">AI 제안 받기</button>
-      </div>
-    </div>
-    <div class="right-panel">
-      <h3>Discovery Summary</h3>
-      <p id="summary">입력한 정보를 기반으로 요약이 여기에 표시됩니다.</p>
+      <div class="right-box">
+        <div class="section-title">고객 정보 입력</div>
+        <textarea id="behavior" placeholder="고객 행동을 입력하세요"></textarea>
+        <textarea id="emotion" placeholder="고객 감정을 입력하세요"></textarea>
+        <textarea id="touchpoint" placeholder="고객 접점을 입력하세요"></textarea>
+        <textarea id="pain" placeholder="고객의 문제점을 입력하세요"></textarea>
 
-      <h3>JTBD 테이블</h3>
-      <table>
-        <thead>
-          <tr><th>단계</th><th>JTBD 요약</th></tr>
-        </thead>
-        <tbody id="jtbdTable">
-          <tr><td>인식</td><td>...</td></tr>
-          <tr><td>고려</td><td>...</td></tr>
-          <tr><td>평가</td><td>...</td></tr>
-        </tbody>
-      </table>
+        <button class="btn" onclick="generateInsight()">💡 Insight 생성</button>
 
-      <h3>Seller To-Do 요약</h3>
-      <ul id="todoList">
-        <li>인식: ...</li>
-        <li>고려: ...</li>
-        <li>평가: ...</li>
-      </ul>
+        <div id="insightResult" class="insight-box" style="display: none;">
+          <h4>고객이 하려는 일 (JTBD)</h4>
+          <pre id="jtbd"></pre>
+          <h4>Seller To-Do</h4>
+          <pre id="todo"></pre>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const dealId = new URLSearchParams(location.search).get("dealId");
-    const deals = JSON.parse(localStorage.getItem("bada_deals") || "[]");
-    const deal = deals.find(d => d.id === dealId);
-    if (deal) document.getElementById("dealName").textContent = deal.name;
+    const urlParams = new URLSearchParams(window.location.search);
+    const dealId = urlParams.get("dealId");
 
-    function generateJTBD() {
+    function loadDeal() {
+      const raw = localStorage.getItem("bada_deals");
+      if (!raw) return;
+
+      let list;
+      try {
+        list = JSON.parse(raw);
+        if (!Array.isArray(list)) return;
+      } catch {
+        return;
+      }
+
+      const found = list.find(d => d.id === dealId);
+      if (!found) return;
+
+      document.getElementById("dealInfo").textContent = found.name;
+      document.getElementById("dealName").textContent = found.name;
+      document.getElementById("dealDesc").textContent = found.description || "(설명 없음)";
+    }
+
+    function generateInsight() {
       const behavior = document.getElementById("behavior").value;
+      const emotion = document.getElementById("emotion").value;
+      const touchpoint = document.getElementById("touchpoint").value;
       const pain = document.getElementById("pain").value;
-      const jtbd = `고객은 ${behavior} 하는 과정에서 ${pain} 문제를 해결하고 싶어합니다.`;
-      document.getElementById("jtbd").value = jtbd;
+
+      const prompt = `
+당신은 B2B 고객 전략가입니다.
+다음 입력을 기반으로 고객의 JTBD와 Seller To-Do를 생성하세요.
+
+고객 행동: ${behavior}
+감정: ${emotion}
+접점: ${touchpoint}
+문제점: ${pain}
+
+결과 예시:
+고객의 JTBD는 ...
+Seller To-Do:
+- ...
+- ...
+`;
+
+      // 여기에 AI 호출 함수로 연결 가능
+      const mockResult = `고객의 JTBD는 통합된 정보를 바탕으로 적절한 옵션을 빠르게 찾고 싶어한다.
+Seller To-Do:
+- 고객 환경에 맞는 비교자료 제공
+- 성공 사례 중심 메시지 전달`;
+
+      const [jtbdLine, ...todoLines] = mockResult.split("\n");
+      document.getElementById("jtbd").textContent = jtbdLine;
+      document.getElementById("todo").textContent = todoLines.join("\n");
+      document.getElementById("insightResult").style.display = "block";
     }
 
-    function generateToDo() {
-      const emotion = document.getElementById("emotion").value;
-      const todo = `프리세일즈는 고객의 '${emotion}' 상태를 고려하여 신뢰 구축 및 우선순위 지원을 해야 합니다.`;
-      document.getElementById("todo").value = todo;
-    }
+    window.addEventListener("DOMContentLoaded", loadDeal);
   </script>
 </body>
 </html>
