@@ -1,1 +1,990 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BADA – Discovery (BSA Framework)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg-body: #f5f5f7;
+        --bg-surface: #ffffff;
+        --bg-subtle: #f9fafb;
+        --border-subtle: #e5e7eb;
+        --border-strong: #d1d5db;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --accent: #3b82f6;
+        --accent-soft: rgba(59, 130, 246, 0.08);
+        --radius-lg: 14px;
+        --radius-md: 10px;
+        --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
+      }
 
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top left, #e0ecff, #f5f5f7);
+        color: var(--text-main);
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(12px);
+        background: rgba(245, 245, 247, 0.9);
+        border-bottom: 1px solid rgba(209, 213, 219, 0.6);
+      }
+
+      .header-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .logo-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f9fafb;
+        font-weight: 700;
+        font-size: 16px;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+      }
+
+      .logo-text-main {
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .logo-text-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .logo-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        font-size: 12px;
+        color: var(--text-muted);
+        background: rgba(255, 255, 255, 0.7);
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 999px;
+        font-size: 13px;
+        padding: 6px 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        background: #111827;
+        color: #f9fafb;
+      }
+
+      .btn.secondary {
+        background: #ffffff;
+        color: #111827;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .btn span.icon {
+        font-size: 14px;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      .main-inner {
+        max-width: 1120px;
+        margin: 12px auto 40px;
+        padding: 0 16px 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.2fr);
+        gap: 18px;
+      }
+
+      @media (max-width: 960px) {
+        .main-inner {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      /* Deal Summary Card */
+      .card {
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(209, 213, 219, 0.7);
+        padding: 16px 16px 14px;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .card-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .deal-name {
+        font-size: 15px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+
+      .deal-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .meta-item {
+        padding: 6px 8px;
+        border-radius: var(--radius-md);
+        background: var(--bg-subtle);
+        border: 1px dashed var(--border-subtle);
+      }
+
+      .meta-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+      }
+
+      .meta-value {
+        font-size: 13px;
+      }
+
+      .deal-tags {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      /* Stage Navigation */
+      .stage-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+
+      .stage-pill {
+        font-size: 11px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        background: #ffffff;
+        cursor: pointer;
+        color: var(--text-muted);
+      }
+
+      .stage-pill.active {
+        border-color: #3b82f6;
+        background: var(--accent-soft);
+        color: #1d4ed8;
+        font-weight: 500;
+      }
+
+      /* Framework Area */
+      .framework-card {
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(209, 213, 219, 0.7);
+        padding: 14px 14px 10px;
+      }
+
+      .framework-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+
+      .framework-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .framework-subtitle {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .framework-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .info-chip {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #f3f4f6;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .save-status {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .save-status.saved {
+        color: #16a34a;
+      }
+
+      .save-status.error {
+        color: #b91c1c;
+      }
+
+      .stage-sections {
+        margin-top: 10px;
+        max-height: calc(100vh - 200px);
+        overflow: auto;
+        padding-right: 6px;
+      }
+
+      .stage-section {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        margin-bottom: 10px;
+        overflow: hidden;
+        background: #f9fafb;
+      }
+
+      .stage-header {
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        background: linear-gradient(90deg, #eef2ff, #eff6ff);
+      }
+
+      .stage-name {
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .stage-name span.badge {
+        font-size: 11px;
+        font-weight: 500;
+        color: #4b5563;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(209, 213, 219, 0.7);
+      }
+
+      .stage-toggle {
+        font-size: 16px;
+        color: #6b7280;
+      }
+
+      .stage-body {
+        padding: 8px 10px 10px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr);
+        gap: 8px;
+        border-top: 1px solid var(--border-subtle);
+        background: #f9fafb;
+      }
+
+      @media (max-width: 720px) {
+        .stage-body {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .field-group {
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+      }
+
+      .field-label {
+        font-size: 11px;
+        color: #4b5563;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .field-label span.en {
+        font-size: 10px;
+        color: #9ca3af;
+      }
+
+      textarea {
+        width: 100%;
+        resize: vertical;
+        min-height: 60px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        padding: 6px 7px;
+        font-size: 12px;
+        font-family: inherit;
+        background: #f9fafb;
+      }
+
+      textarea:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 0;
+        background: #ffffff;
+      }
+
+      .field-group.seller {
+        border-style: dashed;
+        background: #f0f9ff;
+      }
+
+      .field-label.seller-label {
+        color: #1d4ed8;
+      }
+
+      .helper-text {
+        font-size: 10px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+
+      .footer-actions {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="header-inner">
+          <div class="logo-area">
+            <div class="logo-badge">B</div>
+            <div class="logo-text">
+              <div class="logo-text-main">BADA Discovery</div>
+              <div class="logo-text-sub">
+                BSA / CSA 기반 딜 Discovery 워크시트
+              </div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="pill" id="current-deal-pill">Deal: -</div>
+            <button class="btn secondary" id="back-to-list">
+              <span class="icon">←</span> Deal 목록
+            </button>
+            <button class="btn" id="go-to-dq">
+              DQ 도구로 이동 <span class="icon">→</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="main-inner">
+          <!-- 왼쪽: Deal 요약 + Stage 네비 -->
+          <section class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">
+                  Deal 정보
+                  <span style="font-size:11px;color:#9ca3af;"
+                    >/ Customer Context</span
+                  >
+                </div>
+                <div class="card-subtitle">
+                  선택한 Deal의 기본 정보를 확인하고 Discovery 컨텍스트를 정리합니다.
+                </div>
+              </div>
+            </div>
+
+            <div class="deal-name" id="deal-name">-</div>
+
+            <div class="deal-meta">
+              <div class="meta-item">
+                <div class="meta-label">고객사 / Customer</div>
+                <div class="meta-value" id="deal-customer">-</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">영업 담당 / Owner</div>
+                <div class="meta-value" id="deal-owner">-</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Deal ID</div>
+                <div class="meta-value" id="deal-id">-</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">메모 / Note</div>
+                <div class="meta-value" id="deal-note">-</div>
+              </div>
+            </div>
+
+            <div class="deal-tags" id="deal-tags">
+              <!-- 필요시 태그 렌더링 -->
+            </div>
+
+            <hr style="margin: 12px 0;border:none;border-top:1px dashed #e5e7eb;" />
+
+            <div class="card-subtitle" style="margin-bottom:6px;">
+              여정 단계별 Discovery로 점진적으로 채워 넣으세요.
+            </div>
+
+            <div class="stage-nav" id="stage-nav">
+              <!-- JS로 Stage Pill 렌더링 -->
+            </div>
+          </section>
+
+          <!-- 오른쪽: BSA / CSA Framework 입력 -->
+          <section class="framework-card">
+            <div class="framework-header">
+              <div>
+                <div class="framework-title">BSA Framework – Discovery</div>
+                <div class="framework-subtitle">
+                  고객 여정(Customer Journey)과 판매 여정(Seller Plan)을 정렬합니다.
+                </div>
+              </div>
+              <div class="framework-actions">
+                <div class="info-chip">
+                  ⌛ 입력 시 자동 저장 (LocalStorage)
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="framework-subtitle"
+              style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"
+            >
+              <span>
+                각 단계별로 고객 행동·감정·Pain·JTBD, 그리고 판매자의 To-Do를 정리하세요.
+              </span>
+              <span class="save-status" id="save-status">작성 내용이 없습니다</span>
+            </div>
+
+            <div class="stage-sections" id="stage-sections">
+              <!-- JS로 Stage Section 렌더링 -->
+            </div>
+
+            <div class="footer-actions">
+              <button class="btn secondary" id="force-save">
+                수동 저장
+              </button>
+              <button class="btn" id="go-to-dq-bottom">
+                DQ 도구로 이동 <span class="icon">→</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ======= 기본 설정 =======
+      const STAGES = [
+        {
+          key: "awareness",
+          label: "인식",
+          labelEn: "Awareness",
+        },
+        {
+          key: "consideration",
+          label: "고려",
+          labelEn: "Consideration",
+        },
+        {
+          key: "evaluation",
+          label: "평가",
+          labelEn: "Evaluation",
+        },
+        {
+          key: "purchase",
+          label: "구매",
+          labelEn: "Purchase",
+        },
+        {
+          key: "onboarding",
+          label: "온보딩",
+          labelEn: "Onboarding",
+        },
+        {
+          key: "adoption",
+          label: "사용·유지",
+          labelEn: "Adoption & Retention",
+        },
+        {
+          key: "expansion",
+          label: "확장",
+          labelEn: "Expansion",
+        },
+        {
+          key: "renewal",
+          label: "갱신",
+          labelEn: "Renewal",
+        },
+      ];
+
+      const FIELD_DEFS = [
+        {
+          key: "customerActions",
+          label: "고객 행동",
+          labelEn: "Customer Actions",
+          helper: "이 단계에서 고객이 실제로 무엇을 하고 있는가?",
+        },
+        {
+          key: "emotions",
+          label: "감정",
+          labelEn: "Emotions",
+          helper: "고객이 느끼는 감정·불안·기대는 무엇인가?",
+        },
+        {
+          key: "touchpoints",
+          label: "고객 접점",
+          labelEn: "Touchpoints",
+          helper: "어떤 채널·접점에서 우리와 상호작용하는가?",
+        },
+        {
+          key: "painPoints",
+          label: "문제점",
+          labelEn: "Pain Points",
+          helper: "지금 단계에서 가장 크게 느끼는 Pain은 무엇인가?",
+        },
+        {
+          key: "jtbd",
+          label: "JTBD (해야 할 일)",
+          labelEn: "Jobs-To-Be-Done",
+          helper: "고객이 진짜로 '완수하고 싶은 일'은 무엇인가?",
+        },
+      ];
+
+      const SELLER_FIELD = {
+        key: "sellerTodo",
+        label: "판매자 To-Do",
+        labelEn: "Seller Plan / To-Do",
+        helper: "이 단계에서 프리세일즈·영업이 해야 할 행동과 메시지는?",
+      };
+
+      let dealId = null;
+      let discoveryData = {};
+      let saveTimeout = null;
+      let lastSavedAt = null;
+
+      // ======= URL에서 dealId 추출 =======
+      function getDealIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("dealId");
+      }
+
+      // ======= LocalStorage 처리 =======
+      function loadDealInfo(id) {
+        const raw = localStorage.getItem("bada_deals");
+        if (!raw) return null;
+        try {
+          const arr = JSON.parse(raw);
+          return arr.find((d) => String(d.id) === String(id));
+        } catch (e) {
+          console.error("bada_deals 파싱 실패:", e);
+          return null;
+        }
+      }
+
+      function loadDiscoveryData(id) {
+        const raw = localStorage.getItem("bada_discovery_" + id);
+        if (!raw) {
+          // 초기 구조 생성
+          const empty = {};
+          STAGES.forEach((s) => {
+            empty[s.key] = {
+              customerActions: "",
+              emotions: "",
+              touchpoints: "",
+              painPoints: "",
+              jtbd: "",
+              sellerTodo: "",
+            };
+          });
+          return empty;
+        }
+        try {
+          const parsed = JSON.parse(raw);
+          // 누락된 stage나 필드는 기본값 채우기
+          STAGES.forEach((s) => {
+            if (!parsed[s.key]) {
+              parsed[s.key] = {
+                customerActions: "",
+                emotions: "",
+                touchpoints: "",
+                painPoints: "",
+                jtbd: "",
+                sellerTodo: "",
+              };
+            } else {
+              FIELD_DEFS.forEach((f) => {
+                if (typeof parsed[s.key][f.key] !== "string") {
+                  parsed[s.key][f.key] = "";
+                }
+              });
+              if (typeof parsed[s.key].sellerTodo !== "string") {
+                parsed[s.key].sellerTodo = "";
+              }
+            }
+          });
+          return parsed;
+        } catch (e) {
+          console.error("discovery 데이터 파싱 실패:", e);
+          const fallback = {};
+          STAGES.forEach((s) => {
+            fallback[s.key] = {
+              customerActions: "",
+              emotions: "",
+              touchpoints: "",
+              painPoints: "",
+              jtbd: "",
+              sellerTodo: "",
+            };
+          });
+          return fallback;
+        }
+      }
+
+      function saveDiscoveryData() {
+        if (!dealId) return;
+        try {
+          localStorage.setItem(
+            "bada_discovery_" + dealId,
+            JSON.stringify(discoveryData)
+          );
+          lastSavedAt = new Date();
+          updateSaveStatus("자동 저장됨", "saved");
+        } catch (e) {
+          console.error("저장 실패:", e);
+          updateSaveStatus("저장 오류 발생", "error");
+        }
+      }
+
+      function updateSaveStatus(text, statusClass) {
+        const el = document.getElementById("save-status");
+        if (!el) return;
+        el.textContent = text;
+        el.classList.remove("saved", "error");
+        if (statusClass) {
+          el.classList.add(statusClass);
+        }
+      }
+
+      function scheduleAutoSave() {
+        updateSaveStatus("입력 중…", null);
+        if (saveTimeout) {
+          clearTimeout(saveTimeout);
+        }
+        saveTimeout = setTimeout(saveDiscoveryData, 800); // 0.8초 딜레이 후 자동 저장
+      }
+
+      // ======= UI 렌더링 =======
+      function renderDealSummary(deal) {
+        const dealNameEl = document.getElementById("deal-name");
+        const dealCustomerEl = document.getElementById("deal-customer");
+        const dealOwnerEl = document.getElementById("deal-owner");
+        const dealIdEl = document.getElementById("deal-id");
+        const dealNoteEl = document.getElementById("deal-note");
+        const pillEl = document.getElementById("current-deal-pill");
+
+        dealNameEl.textContent = deal?.name || "(제목 없는 Deal)";
+        dealCustomerEl.textContent = deal?.customer || "-";
+        dealOwnerEl.textContent = deal?.owner || "-";
+        dealIdEl.textContent = dealId || "-";
+        dealNoteEl.textContent = deal?.note || "-";
+        pillEl.textContent = "Deal: " + (deal?.name || "-");
+      }
+
+      function renderStageNav() {
+        const navEl = document.getElementById("stage-nav");
+        navEl.innerHTML = "";
+        STAGES.forEach((stage, index) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className =
+            "stage-pill" + (index === 0 ? " active" : "");
+          btn.dataset.stageKey = stage.key;
+          btn.textContent = stage.label + " / " + stage.labelEn.split(" ")[0];
+          btn.addEventListener("click", () => {
+            scrollToStage(stage.key);
+            setActiveStagePill(stage.key);
+          });
+          navEl.appendChild(btn);
+        });
+      }
+
+      function setActiveStagePill(stageKey) {
+        const pills = document.querySelectorAll(".stage-pill");
+        pills.forEach((pill) => {
+          if (pill.dataset.stageKey === stageKey) {
+            pill.classList.add("active");
+          } else {
+            pill.classList.remove("active");
+          }
+        });
+      }
+
+      function scrollToStage(stageKey) {
+        const section = document.querySelector(
+          `.stage-section[data-stage="${stageKey}"]`
+        );
+        if (!section) return;
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function renderStageSections() {
+        const container = document.getElementById("stage-sections");
+        container.innerHTML = "";
+
+        STAGES.forEach((stage, index) => {
+          const section = document.createElement("div");
+          section.className = "stage-section";
+          section.dataset.stage = stage.key;
+
+          // Header
+          const header = document.createElement("div");
+          header.className = "stage-header";
+          header.innerHTML = `
+            <div class="stage-name">
+              <span>${stage.label}</span>
+              <span class="badge">${stage.labelEn}</span>
+            </div>
+            <div class="stage-toggle" data-open="true">−</div>
+          `;
+          section.appendChild(header);
+
+          // Body
+          const body = document.createElement("div");
+          body.className = "stage-body";
+
+          // 왼쪽 컬럼: 고객 관점 필드 3개
+          const colLeft = document.createElement("div");
+          const colRight = document.createElement("div");
+
+          FIELD_DEFS.forEach((field, idx) => {
+            const group = document.createElement("div");
+            group.className = "field-group";
+            group.innerHTML = `
+              <div class="field-label">
+                <span>${field.label}</span>
+                <span class="en">${field.labelEn}</span>
+              </div>
+              <textarea
+                data-stage="${stage.key}"
+                data-field="${field.key}"
+                placeholder=""
+              ></textarea>
+              <div class="helper-text">${field.helper}</div>
+            `;
+            if (idx < 3) {
+              colLeft.appendChild(group);
+            } else {
+              colRight.appendChild(group);
+            }
+          });
+
+          // 판매자 To-Do
+          const sellerGroup = document.createElement("div");
+          sellerGroup.className = "field-group seller";
+          sellerGroup.innerHTML = `
+            <div class="field-label seller-label">
+              <span>${SELLER_FIELD.label}</span>
+              <span class="en">${SELLER_FIELD.labelEn}</span>
+            </div>
+            <textarea
+              data-stage="${stage.key}"
+              data-field="${SELLER_FIELD.key}"
+              placeholder=""
+            ></textarea>
+            <div class="helper-text">${SELLER_FIELD.helper}</div>
+          `;
+          colRight.appendChild(sellerGroup);
+
+          body.appendChild(colLeft);
+          body.appendChild(colRight);
+          section.appendChild(body);
+          container.appendChild(section);
+
+          // 아코디언 토글
+          header.addEventListener("click", (e) => {
+            if (e.target.closest("textarea")) return;
+            const toggle = header.querySelector(".stage-toggle");
+            const isOpen = toggle.dataset.open === "true";
+            if (isOpen) {
+              body.style.display = "none";
+              toggle.textContent = "+";
+              toggle.dataset.open = "false";
+            } else {
+              body.style.display = "grid";
+              toggle.textContent = "−";
+              toggle.dataset.open = "true";
+            }
+          });
+
+          // 첫 섹션만 열어두기, 나머지는 닫을 수도 있음
+          if (index > 1) {
+            const toggle = header.querySelector(".stage-toggle");
+            body.style.display = "none";
+            toggle.textContent = "+";
+            toggle.dataset.open = "false";
+          }
+        });
+
+        // 값 채우기 + 이벤트 바인딩
+        bindTextareaEventsAndPopulate();
+      }
+
+      function bindTextareaEventsAndPopulate() {
+        const textareas = document.querySelectorAll(
+          "textarea[data-stage][data-field]"
+        );
+        textareas.forEach((ta) => {
+          const stageKey = ta.dataset.stage;
+          const fieldKey = ta.dataset.field;
+
+          // 초기 값 세팅
+          if (
+            discoveryData[stageKey] &&
+            typeof discoveryData[stageKey][fieldKey] === "string"
+          ) {
+            ta.value = discoveryData[stageKey][fieldKey];
+          }
+
+          // 입력 이벤트
+          ta.addEventListener("input", () => {
+            if (!discoveryData[stageKey]) {
+              discoveryData[stageKey] = {};
+            }
+            discoveryData[stageKey][fieldKey] = ta.value;
+            scheduleAutoSave();
+          });
+        });
+      }
+
+      // ======= 네비게이션 버튼 =======
+      function initNavButtons() {
+        const backBtn = document.getElementById("back-to-list");
+        const goDqTop = document.getElementById("go-to-dq");
+        const goDqBottom = document.getElementById("go-to-dq-bottom");
+        const forceSaveBtn = document.getElementById("force-save");
+
+        backBtn.addEventListener("click", () => {
+          window.location.href = "index.html";
+        });
+
+        function goToDQ() {
+          if (!dealId) return;
+          // 같은 DealID로 DQ 도구 화면으로 이동
+          window.location.href = "dealqualify.html?dealId=" + encodeURIComponent(dealId);
+        }
+
+        goDqTop.addEventListener("click", goToDQ);
+        goDqBottom.addEventListener("click", goToDQ);
+
+        forceSaveBtn.addEventListener("click", () => {
+          saveDiscoveryData();
+        });
+      }
+
+      // ======= 초기화 =======
+      document.addEventListener("DOMContentLoaded", () => {
+        dealId = getDealIdFromUrl();
+        if (!dealId) {
+          alert("dealId가 URL에 없습니다. index.html에서 Deal을 선택해 주세요.");
+          updateSaveStatus("dealId 없음", "error");
+          return;
+        }
+
+        const deal = loadDealInfo(dealId);
+        if (!deal) {
+          alert(
+            "해당 Deal 정보를 찾을 수 없습니다. Deal 목록에서 다시 진입해 주세요."
+          );
+        }
+        renderDealSummary(deal);
+
+        discoveryData = loadDiscoveryData(dealId);
+
+        renderStageNav();
+        renderStageSections();
+        initNavButtons();
+
+        updateSaveStatus("작성 내용이 없습니다", null);
+      });
+    </script>
+  </body>
+</html>
