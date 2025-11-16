@@ -648,12 +648,12 @@
       }
 
       // ======= LocalStorage 처리 =======
-      function loadDealInfo(id) {
-  const raw = localStorage.getItem("bada_deals");  // ← 여기 수정
+function loadDealInfo(id) {
+  const raw = localStorage.getItem("bada_deals");
   if (!raw) return null;
   try {
-    const arr = JSON.parse(raw);
-    return arr.find((d) => String(d.id) === String(id));
+    const allDeals = JSON.parse(raw);
+    return allDeals[id]?.meta || null;  // ✅ meta만 리턴 (또는 전체 deal 객체로)
   } catch (e) {
     console.error("bada_deals 파싱 실패:", e);
     return null;
