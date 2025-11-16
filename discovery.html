@@ -17,51 +17,24 @@
       --radius-md: 10px;
       --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, sans-serif;
       background: var(--bg-body);
       color: var(--text-main);
-    }
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
     header {
       padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-subtle);
       background: var(--bg-surface);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      border-bottom: 1px solid var(--border-subtle);
     }
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-badge {
-      background: #2563eb;
-      color: white;
       font-weight: bold;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 16px;
-    }
-    .deal-pill {
-      font-size: 14px;
-      padding: 4px 12px;
-      border: 1px solid var(--border-subtle);
-      border-radius: 999px;
-      background: var(--bg-subtle);
-      color: var(--text-muted);
+      font-size: 18px;
     }
     .main {
       display: flex;
@@ -77,145 +50,133 @@
       padding: 20px;
       box-shadow: var(--shadow-soft);
     }
-    .left-box {
-      flex: 1;
-    }
-    .right-box {
-      flex: 2;
-    }
+    .left-box { flex: 1; }
+    .right-box { flex: 2; }
     .section-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .stage {
+      margin-bottom: 16px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+    }
+    .stage-header {
+      background: var(--bg-subtle);
+      padding: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .stage-content {
+      display: none;
+      padding: 12px;
     }
     textarea {
       width: 100%;
-      height: 80px;
-      padding: 10px;
+      height: 60px;
+      margin-bottom: 10px;
+      padding: 8px;
       font-size: 14px;
-      margin-bottom: 14px;
-      border-radius: var(--radius-md);
       border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
       resize: vertical;
     }
     .btn {
       background: var(--accent);
       color: white;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border: none;
       border-radius: 8px;
-      font-size: 14px;
       cursor: pointer;
-      margin-bottom: 20px;
+      margin: 8px 0;
     }
     .insight-box {
       background: var(--bg-subtle);
-      padding: 16px;
+      padding: 10px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-subtle);
-    }
-    .insight-box h4 {
-      margin-top: 0;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-    .insight-box pre {
-      white-space: pre-wrap;
-      font-size: 14px;
-      color: var(--text-main);
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="logo">
-        <div class="logo-badge">B</div>
-        <div><strong>BADA Discovery</strong></div>
-      </div>
-      <div id="dealInfo" class="deal-pill">Loading deal...</div>
-    </header>
-    <div class="main">
-      <div class="left-box">
-        <div class="section-title">Deal 정보</div>
-        <div><strong>이름:</strong> <span id="dealName">-</span></div>
-        <div><strong>설명:</strong> <span id="dealDesc">-</span></div>
-      </div>
-      <div class="right-box">
-        <div class="section-title">고객 정보 입력</div>
-        <textarea id="behavior" placeholder="고객 행동을 입력하세요"></textarea>
-        <textarea id="emotion" placeholder="고객 감정을 입력하세요"></textarea>
-        <textarea id="touchpoint" placeholder="고객 접점을 입력하세요"></textarea>
-        <textarea id="pain" placeholder="고객의 문제점을 입력하세요"></textarea>
+  <header>
+    <div class="logo">BADA – Discovery</div>
+    <div id="dealTitle">Loading deal...</div>
+  </header>
+  <div class="main">
+    <div class="left-box">
+      <div class="section-title">Deal 정보</div>
+      <div><strong>이름:</strong> <span id="dealName">-</span></div>
+      <div><strong>설명:</strong> <span id="dealDesc">-</span></div>
+    </div>
+    <div class="right-box">
+      <div class="section-title">단계별 고객 정보 입력</div>
 
-        <button class="btn" onclick="generateInsight()">💡 Insight 생성</button>
+      <div id="stages"></div>
 
-        <div id="insightResult" class="insight-box" style="display: none;">
-          <h4>고객이 하려는 일 (JTBD)</h4>
-          <pre id="jtbd"></pre>
-          <h4>Seller To-Do</h4>
-          <pre id="todo"></pre>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const dealId = urlParams.get("dealId");
+    const stages = ["인식", "고려", "평가", "구매"];
 
-    function loadDeal() {
-      const raw = localStorage.getItem("bada_deals");
-      if (!raw) return;
+    const stageContainer = document.getElementById("stages");
+    stages.forEach((stage, idx) => {
+      const stageDiv = document.createElement("div");
+      stageDiv.className = "stage";
 
-      let list;
-      try {
-        list = JSON.parse(raw);
-        if (!Array.isArray(list)) return;
-      } catch {
-        return;
-      }
+      const header = document.createElement("div");
+      header.className = "stage-header";
+      header.textContent = stage + " 단계";
+      header.addEventListener("click", () => {
+        const content = stageDiv.querySelector(".stage-content");
+        content.style.display = content.style.display === "none" ? "block" : "none";
+      });
 
-      const found = list.find(d => d.id === dealId);
-      if (!found) return;
+      const content = document.createElement("div");
+      content.className = "stage-content";
+      content.innerHTML = `
+        <textarea placeholder="고객 행동 입력"></textarea>
+        <textarea placeholder="고객 감정 입력"></textarea>
+        <textarea placeholder="고객 접점 입력"></textarea>
+        <textarea placeholder="고객 문제 입력"></textarea>
+        <button class="btn" onclick="generateInsight(this)">Insight 생성</button>
+        <div class="insight-box" style="display:none;">
+          <strong>고객이 하려는 일:</strong>
+          <div class="jtbd"></div>
+          <strong>Seller To-Do:</strong>
+          <div class="todo"></div>
+        </div>
+      `;
+      if (idx === 0) content.style.display = "block";
 
-      document.getElementById("dealInfo").textContent = found.name;
-      document.getElementById("dealName").textContent = found.name;
-      document.getElementById("dealDesc").textContent = found.description || "(설명 없음)";
+      stageDiv.appendChild(header);
+      stageDiv.appendChild(content);
+      stageContainer.appendChild(stageDiv);
+    });
+
+    function generateInsight(btn) {
+      const parent = btn.parentElement;
+      const insight = parent.querySelector(".insight-box");
+      const jtbd = parent.querySelector(".jtbd");
+      const todo = parent.querySelector(".todo");
+      jtbd.textContent = "고객은 정확한 정보를 얻고, 옵션을 비교하고 싶어한다.";
+      todo.textContent = "- 관련 자료 제공\n- 내부 설득용 근거 제공";
+      insight.style.display = "block";
     }
 
-    function generateInsight() {
-      const behavior = document.getElementById("behavior").value;
-      const emotion = document.getElementById("emotion").value;
-      const touchpoint = document.getElementById("touchpoint").value;
-      const pain = document.getElementById("pain").value;
-
-      const prompt = `
-당신은 B2B 고객 전략가입니다.
-다음 입력을 기반으로 고객의 JTBD와 Seller To-Do를 생성하세요.
-
-고객 행동: ${behavior}
-감정: ${emotion}
-접점: ${touchpoint}
-문제점: ${pain}
-
-결과 예시:
-고객의 JTBD는 ...
-Seller To-Do:
-- ...
-- ...
-`;
-
-      // 여기에 AI 호출 함수로 연결 가능
-      const mockResult = `고객의 JTBD는 통합된 정보를 바탕으로 적절한 옵션을 빠르게 찾고 싶어한다.
-Seller To-Do:
-- 고객 환경에 맞는 비교자료 제공
-- 성공 사례 중심 메시지 전달`;
-
-      const [jtbdLine, ...todoLines] = mockResult.split("\n");
-      document.getElementById("jtbd").textContent = jtbdLine;
-      document.getElementById("todo").textContent = todoLines.join("\n");
-      document.getElementById("insightResult").style.display = "block";
+    function loadDeal() {
+      const id = new URLSearchParams(location.search).get("dealId");
+      const raw = localStorage.getItem("bada_deals");
+      if (!raw) return;
+      const list = JSON.parse(raw);
+      const found = list.find(d => d.id === id);
+      if (!found) return;
+      document.getElementById("dealTitle").textContent = found.name;
+      document.getElementById("dealName").textContent = found.name;
+      document.getElementById("dealDesc").textContent = found.description || "(설명 없음)";
     }
 
     window.addEventListener("DOMContentLoaded", loadDeal);
