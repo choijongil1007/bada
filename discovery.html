@@ -83,7 +83,7 @@
       const dealID = new URLSearchParams(window.location.search).get('dealId');
       console.log('[DEBUG] URL에서 가져온 dealId:', dealID);
 
-      const dealsRaw = localStorage.getItem('deals');
+      const dealsRaw = localStorage.getItem('bada_deals');
       const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
       console.log('[DEBUG] localStorage에서 가져온 deals 객체:', deals);
 
