@@ -7,32 +7,73 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f9fafb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e5f0ff, #f5f5f7 45%);
+      color: #111827;
+      min-height: 100vh;
       display: flex;
-      height: 100vh;
+      flex-direction: column;
     }
-    .container {
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(245, 245, 247, 0.9), rgba(245, 245, 247, 0.7));
+      border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+      padding: 14px 20px;
       display: flex;
-      flex-direction: row;
-      width: 100%;
+      align-items: center;
+      justify-content: space-between;
     }
-    .sidebar {
-      width: 25%;
-      background-color: #ffffff;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .main {
-      width: 75%;
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 20%, #93c5fd, #2563eb);
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-text-main {
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      font-size: 17px;
+    }
+    .brand-text-sub {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    main {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) 1fr;
+      gap: 24px;
       padding: 20px;
-      overflow-y: auto;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .sidebar, .main {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    h2, h3 {
+      margin-top: 0;
     }
     .section {
-      margin-bottom: 20px;
       border: 1px solid #e5e7eb;
       border-radius: 10px;
       background-color: #ffffff;
+      margin-bottom: 16px;
     }
     .section-header {
       background-color: #f3f4f6;
@@ -49,27 +90,43 @@
       width: 100%;
       height: 50px;
       margin-bottom: 10px;
+      padding: 8px;
+      font-size: 13px;
       resize: vertical;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
     }
     .output-box {
       margin-top: 10px;
       padding: 10px;
       background-color: #ecfdf5;
       border-left: 4px solid #10b981;
+      white-space: pre-wrap;
     }
     button {
       background-color: #10b981;
       color: white;
       padding: 8px 16px;
       border: none;
-      border-radius: 5px;
+      border-radius: 999px;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <header>
+    <div class="brand">
+      <div class="brand-logo">B</div>
+      <div>
+        <div class="brand-text-main">BADA</div>
+        <div class="brand-text-sub">Buyer-Aligned Deal Assessment</div>
+      </div>
+    </div>
+  </header>
+  <main>
     <div class="sidebar">
       <h3>Deal 정보</h3>
       <div id="deal-info"></div>
@@ -78,132 +135,6 @@
       <h2>Discovery 입력</h2>
       <div id="phases"></div>
     </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("DOMContentLoaded 실행됨");
-
-      // ---------- Deal ID 로딩 ----------
-      const dealID = new URLSearchParams(window.location.search).get("dealId");
-      console.log("dealId:", dealID);
-
-      const dealsRaw = localStorage.getItem("bada_deals");
-      const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
-      const dealData = deals[dealID];
-      window.dealData = dealData;
-
-      const dealInfoEl = document.getElementById("deal-info");
-
-      // ---------- Deal Info 표시 ----------
-      if (dealData?.meta) {
-        const m = dealData.meta;
-        dealInfoEl.innerHTML = `
-          <p><strong>Deal 이름:</strong> ${m.dealName || "(입력 없음)"}</p>
-          <p><strong>고객사:</strong> ${m.customerName || "(입력 없음)"}</p>
-          <p><strong>고객 담당자:</strong> ${m.buyerPersona || "(입력 없음)"}</p>
-          <p><strong>솔루션:</strong> ${m.solutionName || "(입력 없음)"}</p>
-          <p><strong>단계:</strong> ${m.stage || "(입력 없음)"}</p>
-          <p><strong>자사 담당자:</strong> ${m.ownerName || "(입력 없음)"}</p>
-          <p><strong>메모:</strong> ${m.note || "(입력 없음)"}</p>
-        `;
-      } else {
-        dealInfoEl.innerHTML = "<p>⚠️ Deal 정보를 불러올 수 없습니다.</p>";
-      }
-
-      // ---------- Discovery 단계 생성 ----------
-      const phaseNames = ["인식", "고려", "평가", "구매"];
-      const questions = ["고객 행동", "고객 감정", "고객 접점", "고객 문제"];
-
-      const phasesEl = document.getElementById("phases");
-
-      phaseNames.forEach((phase, idx) => {
-        const section = document.createElement("div");
-        section.className = "section";
-
-        const header = document.createElement("div");
-        header.className = "section-header";
-        header.innerText = phase;
-
-        const content = document.createElement("div");
-        content.className = "section-content";
-        if (idx === 0) content.style.display = "block";
-
-        header.onclick = () => {
-          content.style.display = content.style.display === "none" ? "block" : "none";
-        };
-
-        const inputs = {};
-
-        questions.forEach((q) => {
-          const label = document.createElement("label");
-          label.innerText = q;
-
-          const textarea = document.createElement("textarea");
-          textarea.placeholder = `${phase} 단계의 ${q}`;
-          inputs[q] = textarea;
-
-          content.appendChild(label);
-          content.appendChild(textarea);
-        });
-
-        const btn = document.createElement("button");
-        btn.innerText = "Insight 생성";
-        btn.onclick = async () => {
-          const inputText = questions.map((q) => `${q}: ${inputs[q].value}`).join("\n");
-          const prompt = `다음은 ${phase} 단계의 고객 정보입니다.\n${inputText}\n이 고객의 하려는 일(JTBD)과 To-Do를 작성해줘.`;
-
-          const response = await callGemini(prompt);
-
-          const jtbd = document.createElement("div");
-          jtbd.className = "output-box";
-          jtbd.innerText = `고객 JTBD:\n${response.jtbd}`;
-
-          const todo = document.createElement("div");
-          todo.className = "output-box";
-          todo.innerText = `판매자 To-Do:\n${response.todo}`;
-
-          content.appendChild(jtbd);
-          content.appendChild(todo);
-        };
-
-        content.appendChild(btn);
-        section.appendChild(header);
-        section.appendChild(content);
-        phasesEl.appendChild(section);
-      });
-
-      // ---------- Gemini API ----------
-      async function callGemini(prompt) {
-        const apiKey = "YOUR_GEMINI_API_KEY"; // 실제 키 입력
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
-
-        const body = {
-          contents: [{ parts: [{ text: prompt }] }],
-        };
-
-        try {
-          const res = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-
-          const result = await res.json();
-          const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
-          const [jtbd, todo] = text.split("판매자 To-Do:");
-
-          return {
-            jtbd: jtbd?.replace("고객 JTBD:", "").trim() || "(JTBD 없음)",
-            todo: todo?.trim() || "(To-Do 없음)",
-          };
-        } catch (e) {
-          console.error("[Gemini 호출 오류]", e);
-          return { jtbd: "[오류 발생]", todo: "" };
-        }
-      }
-    });
-  </script>
-
+  </main>
 </body>
 </html>
