@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BADA – Buyer-Aligned Deal Assessment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg-body: #f5f5f7;
+        --bg-surface: #ffffff;
+        --bg-subtle: #f9fafb;
+        --border-subtle: #e5e7eb;
+        --border-strong: #d1d5db;
+        --text-main: #111827;
+        --text-muted: #6b7280;
+        --accent: #2563eb;
+        --accent-soft: #dbeafe;
+        --accent-strong: #1d4ed8;
+        --danger: #ef4444;
+        --radius-lg: 14px;
+        --radius-md: 10px;
+        --radius-pill: 999px;
+        --shadow-soft: 0 14px 40px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #e5f0ff, #f5f5f7 45%);
+        color: var(--text-main);
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(14px);
+        background: linear-gradient(
+          to bottom,
+          rgba(245, 245, 247, 0.9),
+          rgba(245, 245, 247, 0.7)
+        );
+        border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+      }
+
+      .header-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 14px;
+        background: radial-gradient(circle at 30% 20%, #93c5fd, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        box-shadow: 0 12px 35px rgba(37, 99, 235, 0.45);
+      }
+
+      .brand-text-main {
+        font-weight: 650;
+        letter-spacing: 0.02em;
+        font-size: 17px;
+      }
+
+      .brand-text-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: var(--radius-pill);
+        background: rgba(37, 99, 235, 0.06);
+        color: var(--accent-strong);
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .badge-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      main {
+        flex: 1;
+      }
+
+      .content-inner {
+        max-width: 1120px;
+        margin: 24px auto 32px auto;
+        padding: 0 20px 24px 20px;
+        display: grid;
+        grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      /* Left: Deal 생성 패널 */
+      .panel {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        box-shadow: var(--shadow-soft);
+        padding: 18px 18px 16px 18px;
+      }
+
+      .panel-header {
+        margin-bottom: 10px;
+      }
+
+      .panel-title {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .panel-subtitle {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .field-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #4b5563;
+      }
+
+      label span.required {
+        color: #ef4444;
+        margin-left: 2px;
+      }
+
+      input[type="text"],
+      select {
+        border-radius: 9px;
+        border: 1px solid var(--border-subtle);
+        padding: 7px 9px;
+        font-size: 13px;
+        outline: none;
+        background: #f9fafb;
+        transition: border-color 0.15s ease, background-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      input[type="text"]:focus,
+      select:focus {
+        border-color: var(--accent);
+        background: #ffffff;
+        box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+      }
+
+      .field-inline {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .helper-text {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .btn-primary {
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 14px;
+        margin-top: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        box-shadow: 0 10px 30px rgba(37, 99, 235, 0.45);
+        transition: transform 0.12s ease, box-shadow 0.12s ease,
+          background 0.12s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 14px 36px rgba(37, 99, 235, 0.55);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+      }
+
+      .btn-primary-icon {
+        font-size: 14px;
+      }
+
+      .alert {
+        margin-top: 6px;
+        border-radius: 10px;
+        padding: 7px 9px;
+        font-size: 11px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        background: #fef3c7;
+        border: 1px solid #facc15;
+        color: #92400e;
+      }
+
+      .alert-icon {
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .alert strong {
+        font-weight: 600;
+      }
+
+      /* Right: Deal 리스트 영역 */
+      .deal-panel {
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 18px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        box-shadow: var(--shadow-soft);
+        padding: 18px 18px 16px 18px;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .deal-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .deal-panel-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .deal-count {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .deal-filters {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .search-input {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        background: var(--bg-subtle);
+        font-size: 12px;
+      }
+
+      .search-input input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 12px;
+        width: 100%;
+      }
+
+      .search-icon {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .stage-filter {
+        border-radius: 999px;
+        border: 1px solid var(--border-subtle);
+        background: #ffffff;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .deal-list {
+        margin-top: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .deal-empty {
+        font-size: 12px;
+        color: var(--text-muted);
+        padding: 18px 12px;
+        border-radius: 12px;
+        background: #f9fafb;
+        border: 1px dashed var(--border-subtle);
+      }
+
+      .deal-card {
+        border-radius: 14px;
+        border: 1px solid var(--border-subtle);
+        background: linear-gradient(
+          135deg,
+          rgba(249, 250, 251, 0.96),
+          rgba(255, 255, 255, 0.98)
+        );
+        padding: 10px 11px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+        transition: box-shadow 0.15s ease, transform 0.12s ease,
+          border-color 0.15s ease;
+      }
+
+      .deal-card:hover {
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+        transform: translateY(-1px);
+        border-color: rgba(37, 99, 235, 0.25);
+      }
+
+      .deal-main {
+        min-width: 0;
+      }
+
+      .deal-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .deal-meta-line {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+      }
+
+      .deal-meta-line span + span::before {
+        content: "·";
+        margin: 0 5px;
+        color: #d1d5db;
+      }
+
+      .deal-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 4px;
+      }
+
+      .tag {
+        border-radius: 999px;
+        font-size: 10px;
+        padding: 3px 7px;
+        border: 1px solid #e5e7eb;
+        background: rgba(249, 250, 251, 0.95);
+        color: #4b5563;
+      }
+
+      .tag-stage {
+        border-color: rgba(37, 99, 235, 0.3);
+        background: rgba(219, 234, 254, 0.9);
+        color: #1d4ed8;
+        font-weight: 500;
+      }
+
+      .tag-new {
+        border-color: rgba(52, 211, 153, 0.35);
+        background: rgba(240, 253, 250, 0.96);
+        color: #047857;
+      }
+
+      .deal-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+      }
+
+      .deal-actions-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+
+      .btn-ghost,
+      .btn-outline {
+        font-size: 11px;
+        border-radius: 999px;
+        padding: 5px 9px;
+        border: 1px solid var(--border-subtle);
+        background: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #374151;
+        transition: background 0.12s ease, border-color 0.12s ease,
+          transform 0.12s ease, box-shadow 0.12s ease;
+      }
+
+      .btn-outline {
+        border-color: rgba(37, 99, 235, 0.4);
+        color: var(--accent-strong);
+        background: rgba(239, 246, 255, 0.9);
+      }
+
+      .btn-outline:hover {
+        background: #dbeafe;
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
+        transform: translateY(-0.5px);
+      }
+
+      .btn-ghost:hover {
+        background: #f3f4f6;
+      }
+
+      .btn-ghost.danger {
+        color: var(--danger);
+        border-color: rgba(248, 113, 113, 0.6);
+        background: #fef2f2;
+      }
+
+      .btn-ghost.danger:hover {
+        background: #fee2e2;
+      }
+
+      .deal-updated {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 880px) {
+        .content-inner {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 520px) {
+        .header-inner {
+          padding-inline: 14px;
+        }
+
+        .content-inner {
+          padding-inline: 14px;
+        }
+
+        .deal-card {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .deal-actions {
+          align-items: flex-start;
+        }
+
+        .deal-actions-buttons {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header>
+        <div class="header-inner">
+          <div class="brand">
+            <div class="brand-logo">B</div>
+            <div>
+              <div class="brand-text-main">BADA</div>
+              <div class="brand-text-sub">
+                Buyer-Aligned Deal Assessment · BSA + DQ Hub
+              </div>
+            </div>
+          </div>
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>MVP · LocalStorage Prototype</span>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="content-inner">
+          <!-- Left: Deal 생성 패널 -->
+          <section class="panel">
+            <div class="panel-header">
+              <h2 class="panel-title">새 Deal 생성</h2>
+              <p class="panel-subtitle">
+                Discovery & DQ에 사용할 기본 정보를 먼저 등록합니다.
+              </p>
+            </div>
+
+            <form id="deal-form">
+              <div class="field-group">
+                <label for="dealName">
+                  Deal 이름<span class="required">*</span>
+                </label>
+                <input
+                  id="dealName"
+                  type="text"
+                  placeholder="예: 돌고래은행 HCP Vault Dedicated 도입"
+                  required
+                />
+              </div>
+
+              <div class="field-group field-inline">
+                <div>
+                  <label for="customerName">고객사</label>
+                  <input
+                    id="customerName"
+                    type="text"
+                    placeholder="예: 돌고래은행"
+                  />
+                </div>
+                <div>
+                  <label for="buyerPersona">Buyer Persona</label>
+                  <input
+                    id="buyerPersona"
+                    type="text"
+                    placeholder="예: CIO, 보안팀장"
+                  />
+                </div>
+              </div>
+
+              <div class="field-group field-inline">
+                <div>
+                  <label for="solutionName">솔루션 / 제안 대상</label>
+                  <input
+                    id="solutionName"
+                    type="text"
+                    placeholder="예: HCP Vault Dedicated"
+                  />
+                </div>
+                <div>
+                  <label for="dealStage">현재 단계</label>
+                  <select id="dealStage">
+                    <option value="Discovery" selected>Discovery</option>
+                    <option value="Consideration">Consideration</option>
+                    <option value="Evaluation">Evaluation</option>
+                    <option value="Proposal">Proposal</option>
+                    <option value="PoC">PoC</option>
+                    <option value="Closing">Closing</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field-group field-inline">
+                <div>
+                  <label for="ownerName">담당자 (내부)</label>
+                  <input
+                    id="ownerName"
+                    type="text"
+                    placeholder="예: Choi Jongil"
+                  />
+                </div>
+                <div>
+                  <label for="salesRegion">메모 (선택)</label>
+                  <input
+                    id="salesRegion"
+                    type="text"
+                    placeholder="예: 금융 / 국내, PoC 예정"
+                  />
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary">
+                <span class="btn-primary-icon">＋</span>
+                <span>Deal 생성</span>
+              </button>
+
+              <div class="helper-text">
+                * Deal 생성 후, 각 카드에서
+                <strong>Discovery</strong>와
+                <strong>Deal Assessment</strong> 화면으로 이동할 수 있습니다.
+              </div>
+
+              <div class="alert">
+                <span class="alert-icon">💡</span>
+                <span>
+                  <strong>Tip.</strong> BADA는 브라우저
+                  <strong>localStorage</strong>를 사용합니다. 같은 브라우저 /
+                  같은 기기에서만 Deal 목록이 유지됩니다.
+                </span>
+              </div>
+            </form>
+          </section>
+
+          <!-- Right: Deal 리스트 패널 -->
+          <section class="deal-panel">
+            <div class="deal-panel-header">
+              <div>
+                <div class="deal-panel-title">내 Deal 목록</div>
+                <div class="deal-count" id="deal-count">총 0건</div>
+              </div>
+            </div>
+
+            <div class="deal-filters">
+              <div class="search-input">
+                <span class="search-icon">🔍</span>
+                <input
+                  id="searchInput"
+                  type="text"
+                  placeholder="Deal 이름, 고객사, 담당자 검색..."
+                />
+              </div>
+              <select id="stageFilter" class="stage-filter">
+                <option value="all">모든 단계</option>
+                <option value="Discovery">Discovery</option>
+                <option value="Consideration">Consideration</option>
+                <option value="Evaluation">Evaluation</option>
+                <option value="Proposal">Proposal</option>
+                <option value="PoC">PoC</option>
+                <option value="Closing">Closing</option>
+              </select>
+            </div>
+
+            <div id="deal-list" class="deal-list"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // ===== LocalStorage Helper =====
+      const STORAGE_KEY = "bada_deals_v1";
+
+      function loadAllDeals() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        try {
+          return JSON.parse(raw);
+        } catch (e) {
+          console.error("BADA storage parse error:", e);
+          return {};
+        }
+      }
+
+      function saveAllDeals(deals) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(deals));
+      }
+
+      function generateDealId() {
+        const ts = Date.now();
+        const rand = Math.random().toString(16).slice(2, 6);
+        return `deal_${ts}_${rand}`;
+      }
+
+      function formatDateShort(isoString) {
+        if (!isoString) return "-";
+        const d = new Date(isoString);
+        if (Number.isNaN(d.getTime())) return "-";
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        const hh = String(d.getHours()).padStart(2, "0");
+        const mi = String(d.getMinutes()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd} ${hh}:${mi}`;
+      }
+
+      // ===== UI Rendering =====
+      const dealListEl = document.getElementById("deal-list");
+      const dealCountEl = document.getElementById("deal-count");
+      const searchInputEl = document.getElementById("searchInput");
+      const stageFilterEl = document.getElementById("stageFilter");
+
+      function getFilteredDeals() {
+        const deals = loadAllDeals();
+        const search = (searchInputEl.value || "").trim().toLowerCase();
+        const stageFilter = stageFilterEl.value;
+
+        const entries = Object.values(deals);
+
+        return entries.filter((deal) => {
+          const { meta } = deal;
+          if (!meta) return false;
+
+          if (stageFilter !== "all" && meta.stage !== stageFilter) {
+            return false;
+          }
+
+          if (!search) return true;
+
+          const haystack = [
+            meta.dealName,
+            meta.customerName,
+            meta.buyerPersona,
+            meta.ownerName,
+            meta.solutionName,
+            meta.note,
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+          return haystack.includes(search);
+        });
+      }
+
+      function renderDeals() {
+        const deals = getFilteredDeals();
+
+        dealCountEl.textContent = `총 ${deals.length}건`;
+
+        if (deals.length === 0) {
+          dealListEl.innerHTML = `
+            <div class="deal-empty">
+              아직 등록된 Deal이 없습니다.<br/>
+              왼쪽에서 기본 정보를 입력하고 <strong>Deal 생성</strong> 버튼을 눌러 시작해보세요.
+            </div>
+          `;
+          return;
+        }
+
+        // 최신 생성순 정렬 (createdAt DESC)
+        deals.sort((a, b) => {
+          const at = a.meta?.createdAt || "";
+          const bt = b.meta?.createdAt || "";
+          return bt.localeCompare(at);
+        });
+
+        dealListEl.innerHTML = "";
+        deals.forEach((deal) => {
+          const { meta, discovery, dq } = deal;
+          const stage = meta.stage || "Discovery";
+
+          const card = document.createElement("div");
+          card.className = "deal-card";
+
+          const main = document.createElement("div");
+          main.className = "deal-main";
+
+          const nameEl = document.createElement("div");
+          nameEl.className = "deal-name";
+          nameEl.textContent = meta.dealName || "(이름 없음)";
+
+          const metaLine = document.createElement("div");
+          metaLine.className = "deal-meta-line";
+          const mParts = [];
+          if (meta.customerName) mParts.push(meta.customerName);
+          if (meta.buyerPersona) mParts.push(meta.buyerPersona);
+          if (meta.solutionName) mParts.push(meta.solutionName);
+          metaLine.innerHTML = mParts
+            .map((txt) => `<span>${txt}</span>`)
+            .join("");
+
+          const tagsEl = document.createElement("div");
+          tagsEl.className = "deal-tags";
+
+          const stageTag = document.createElement("span");
+          stageTag.className = "tag tag-stage";
+          stageTag.textContent = stage;
+          tagsEl.appendChild(stageTag);
+
+          if (!discovery || !discovery.discoverySummary) {
+            const newTag = document.createElement("span");
+            newTag.className = "tag tag-new";
+            newTag.textContent = "Discovery 미작성";
+            tagsEl.appendChild(newTag);
+          }
+
+          if (meta.ownerName) {
+            const ownerTag = document.createElement("span");
+            ownerTag.className = "tag";
+            ownerTag.textContent = `Owner: ${meta.ownerName}`;
+            tagsEl.appendChild(ownerTag);
+          }
+
+          if (dq && typeof dq.winScore === "number") {
+            const winTag = document.createElement("span");
+            winTag.className = "tag";
+            winTag.textContent = `Win Score: ${dq.winScore}`;
+            tagsEl.appendChild(winTag);
+          }
+
+          main.appendChild(nameEl);
+          main.appendChild(metaLine);
+          main.appendChild(tagsEl);
+
+          const actions = document.createElement("div");
+          actions.className = "deal-actions";
+
+          const buttonsWrap = document.createElement("div");
+          buttonsWrap.className = "deal-actions-buttons";
+
+          const btnDiscovery = document.createElement("button");
+          btnDiscovery.className = "btn-outline";
+          btnDiscovery.textContent = "Discovery";
+          btnDiscovery.addEventListener("click", () => {
+            window.location.href =
+              "discovery.html?dealId=" + encodeURIComponent(meta.dealId);
+          });
+
+          const btnDQ = document.createElement("button");
+          btnDQ.className = "btn-ghost";
+          btnDQ.textContent = "Deal Assessment";
+          btnDQ.addEventListener("click", () => {
+            window.location.href =
+              "dealqualify.html?dealId=" + encodeURIComponent(meta.dealId);
+          });
+
+          const btnDelete = document.createElement("button");
+          btnDelete.className = "btn-ghost danger";
+          btnDelete.textContent = "삭제";
+          btnDelete.addEventListener("click", () => {
+            const ok = window.confirm(
+              `정말로 이 Deal을 삭제할까요?\n\n- ${meta.dealName}\n\n삭제 후에는 복구할 수 없습니다.`
+            );
+            if (!ok) return;
+
+            const all = loadAllDeals();
+            delete all[meta.dealId];
+            saveAllDeals(all);
+            renderDeals();
+          });
+
+          buttonsWrap.appendChild(btnDiscovery);
+          buttonsWrap.appendChild(btnDQ);
+          buttonsWrap.appendChild(btnDelete);
+
+          const updated = document.createElement("div");
+          updated.className = "deal-updated";
+          updated.textContent = `생성: ${formatDateShort(
+            meta.createdAt
+          )} · 수정: ${formatDateShort(meta.updatedAt)}`;
+
+          actions.appendChild(buttonsWrap);
+          actions.appendChild(updated);
+
+          card.appendChild(main);
+          card.appendChild(actions);
+
+          dealListEl.appendChild(card);
+        });
+      }
+
+      // ===== Event Handlers =====
+      const formEl = document.getElementById("deal-form");
+
+      formEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const dealName = document.getElementById("dealName").value.trim();
+        const customerName =
+          document.getElementById("customerName").value.trim();
+        const buyerPersona =
+          document.getElementById("buyerPersona").value.trim();
+        const solutionName =
+          document.getElementById("solutionName").value.trim();
+        const dealStage = document.getElementById("dealStage").value;
+        const ownerName = document.getElementById("ownerName").value.trim();
+        const note = document.getElementById("salesRegion").value.trim();
+
+        if (!dealName) {
+          alert("Deal 이름은 필수입니다.");
+          return;
+        }
+
+        const now = new Date().toISOString();
+        const dealId = generateDealId();
+
+        const deals = loadAllDeals();
+
+        deals[dealId] = {
+          meta: {
+            dealId,
+            dealName,
+            customerName,
+            buyerPersona,
+            solutionName,
+            stage: dealStage,
+            ownerName,
+            note,
+            createdAt: now,
+            updatedAt: now,
+          },
+          discovery: {},
+          dq: {},
+        };
+
+        saveAllDeals(deals);
+
+        formEl.reset();
+        document.getElementById("dealStage").value = "Discovery";
+
+        renderDeals();
+      });
+
+      searchInputEl.addEventListener("input", () => {
+        renderDeals();
+      });
+
+      stageFilterEl.addEventListener("change", () => {
+        renderDeals();
+      });
+
+      // ===== 초기 렌더링 =====
+      document.addEventListener("DOMContentLoaded", () => {
+        renderDeals();
+      });
+    </script>
+  </body>
+</html>
