@@ -88,6 +88,7 @@
       console.log('[DEBUG] localStorage에서 가져온 deals 객체:', deals);
 
       const dealData = deals[dealID];
+      window.dealData = dealData;
       console.log('[DEBUG] dealData:', dealData);
 
       const dealInfoEl = document.getElementById('deal-info');
