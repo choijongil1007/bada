@@ -2,184 +2,142 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>BADA – Discovery</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discovery - BSA</title>
   <style>
-    :root {
-      --bg-body: #f5f5f7;
-      --bg-surface: #ffffff;
-      --bg-subtle: #f9fafb;
-      --border-subtle: #e5e7eb;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --accent: #10b981;
-      --radius-lg: 14px;
-      --radius-md: 10px;
-      --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.04);
-    }
-    * { box-sizing: border-box; }
     body {
+      font-family: sans-serif;
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: var(--bg-body);
-      color: var(--text-main);
-    }
-    header {
-      padding: 12px 20px;
+      padding: 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
+      height: 100vh;
     }
-    .logo {
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .main {
-      display: flex;
-      max-width: 1200px;
-      margin: 24px auto;
-      padding: 0 16px;
-      gap: 24px;
-    }
-    .left-box, .right-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+    .left-panel {
+      width: 30%;
+      background-color: #f0f4f8;
       padding: 20px;
-      box-shadow: var(--shadow-soft);
+      box-sizing: border-box;
+      border-right: 1px solid #ccc;
     }
-    .left-box { flex: 1; }
-    .right-box { flex: 2; }
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 12px;
+    .right-panel {
+      width: 70%;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .deal-info p {
+      margin: 5px 0;
     }
     .stage {
-      margin-bottom: 16px;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 15px;
     }
     .stage-header {
-      background: var(--bg-subtle);
+      background-color: #e5e7eb;
       padding: 10px;
       cursor: pointer;
       font-weight: bold;
     }
-    .stage-content {
+    .stage-body {
       display: none;
-      padding: 12px;
+      padding: 15px;
+      background-color: #fff;
     }
-    textarea {
+    .field {
+      margin-bottom: 12px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .field textarea {
       width: 100%;
       height: 60px;
-      margin-bottom: 10px;
       padding: 8px;
-      font-size: 14px;
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
       resize: vertical;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-    .btn {
-      background: var(--accent);
+    .button {
+      background-color: #10B981;
       color: white;
-      padding: 8px 16px;
       border: none;
-      border-radius: 8px;
+      padding: 10px 15px;
+      border-radius: 5px;
       cursor: pointer;
-      margin: 8px 0;
-    }
-    .insight-box {
-      background: var(--bg-subtle);
-      padding: 10px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
       margin-top: 10px;
+    }
+    .insight-box, .todo-box {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #f9fafb;
+      border: 1px dashed #ccc;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">BADA – Discovery</div>
-    <div id="dealTitle">Loading deal...</div>
-  </header>
-  <div class="main">
-    <div class="left-box">
-      <div class="section-title">Deal 정보</div>
-      <div><strong>이름:</strong> <span id="dealName">-</span></div>
-      <div><strong>설명:</strong> <span id="dealDesc">-</span></div>
+  <div class="left-panel">
+    <h2>Deal 정보</h2>
+    <div class="deal-info">
+      <p><strong>Deal 이름:</strong> Vault 도입 프로젝트</p>
+      <p><strong>고객사:</strong> ABC은행</p>
+      <p><strong>고객 담당자:</strong> 김보안 부장</p>
+      <p><strong>솔루션:</strong> Vault Enterprise</p>
+      <p><strong>현재 단계:</strong> 고려</p>
+      <p><strong>자사 담당자:</strong> 이프리세일즈 차장</p>
     </div>
-    <div class="right-box">
-      <div class="section-title">단계별 고객 정보 입력</div>
+  </div>
+  <div class="right-panel">
+    <h2>Discovery 입력</h2>
 
-      <div id="stages"></div>
-
+    <div class="stage" id="stage-awareness">
+      <div class="stage-header" onclick="toggleStage('awareness')">인식 단계</div>
+      <div class="stage-body" id="awareness-body">
+        <div class="field">
+          <label>고객 행동</label>
+          <textarea id="awareness-behavior"></textarea>
+        </div>
+        <div class="field">
+          <label>고객 감정</label>
+          <textarea id="awareness-emotion"></textarea>
+        </div>
+        <div class="field">
+          <label>고객 접점</label>
+          <textarea id="awareness-touchpoint"></textarea>
+        </div>
+        <div class="field">
+          <label>고객 문제</label>
+          <textarea id="awareness-pain"></textarea>
+        </div>
+        <button class="button" onclick="generateInsights('awareness')">Insight 생성</button>
+        <div class="insight-box" id="awareness-jtbd">[고객의 JTBD]</div>
+        <div class="todo-box" id="awareness-todo">[판매자 To-Do]</div>
+      </div>
     </div>
+
+    <!-- 고려, 평가, 구매 단계도 동일 구조로 복제해서 id만 바꾸면 됩니다 -->
   </div>
 
   <script>
-    const stages = ["인식", "고려", "평가", "구매"];
-
-    const stageContainer = document.getElementById("stages");
-    stages.forEach((stage, idx) => {
-      const stageDiv = document.createElement("div");
-      stageDiv.className = "stage";
-
-      const header = document.createElement("div");
-      header.className = "stage-header";
-      header.textContent = stage + " 단계";
-      header.addEventListener("click", () => {
-        const content = stageDiv.querySelector(".stage-content");
-        content.style.display = content.style.display === "none" ? "block" : "none";
-      });
-
-      const content = document.createElement("div");
-      content.className = "stage-content";
-      content.innerHTML = `
-        <textarea placeholder="고객 행동 입력"></textarea>
-        <textarea placeholder="고객 감정 입력"></textarea>
-        <textarea placeholder="고객 접점 입력"></textarea>
-        <textarea placeholder="고객 문제 입력"></textarea>
-        <button class="btn" onclick="generateInsight(this)">Insight 생성</button>
-        <div class="insight-box" style="display:none;">
-          <strong>고객이 하려는 일:</strong>
-          <div class="jtbd"></div>
-          <strong>Seller To-Do:</strong>
-          <div class="todo"></div>
-        </div>
-      `;
-      if (idx === 0) content.style.display = "block";
-
-      stageDiv.appendChild(header);
-      stageDiv.appendChild(content);
-      stageContainer.appendChild(stageDiv);
-    });
-
-    function generateInsight(btn) {
-      const parent = btn.parentElement;
-      const insight = parent.querySelector(".insight-box");
-      const jtbd = parent.querySelector(".jtbd");
-      const todo = parent.querySelector(".todo");
-      jtbd.textContent = "고객은 정확한 정보를 얻고, 옵션을 비교하고 싶어한다.";
-      todo.textContent = "- 관련 자료 제공\n- 내부 설득용 근거 제공";
-      insight.style.display = "block";
+    function toggleStage(stage) {
+      const body = document.getElementById(`${stage}-body`);
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
     }
 
-    function loadDeal() {
-      const id = new URLSearchParams(location.search).get("dealId");
-      const raw = localStorage.getItem("bada_deals");
-      if (!raw) return;
-      const list = JSON.parse(raw);
-      const found = list.find(d => d.id === id);
-      if (!found) return;
-      document.getElementById("dealTitle").textContent = found.name;
-      document.getElementById("dealName").textContent = found.name;
-      document.getElementById("dealDesc").textContent = found.description || "(설명 없음)";
+    function generateInsights(stage) {
+      const jtbd = `[${stage}] Gemini가 생성한 고객의 JTBD 예시입니다.`;
+      const todo = `[${stage}] Gemini가 생성한 판매자 To-Do 예시입니다.`;
+      document.getElementById(`${stage}-jtbd`).innerText = jtbd;
+      document.getElementById(`${stage}-todo`).innerText = todo;
     }
 
-    window.addEventListener("DOMContentLoaded", loadDeal);
+    // 초기에 인식 단계만 열기
+    window.onload = () => {
+      document.getElementById('awareness-body').style.display = 'block';
+    };
   </script>
 </body>
 </html>
