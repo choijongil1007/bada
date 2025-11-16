@@ -220,7 +220,7 @@
     }
 
     function loadDeal() {
-      const stored = localStorage.getItem("bada_deals_v1");
+      const stored = localStorage.getItem("bada_deals");
       if (!stored) return;
       dealList = JSON.parse(stored);
       const found = dealList.find((d) => d.id === dealId);
