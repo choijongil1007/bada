@@ -1,138 +1,209 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Discovery – BADA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      :root {
-        --bg-body: #f5f5f7;
-        --bg-surface: #ffffff;
-        --bg-subtle: #f9fafb;
-        --border-subtle: #e5e7eb;
-        --border-strong: #d1d5db;
-        --text-main: #111827;
-        --text-muted: #6b7280;
-        --accent: #2563eb;
-        --accent-soft: #dbeafe;
-        --accent-strong: #1d4ed8;
-        --danger: #ef4444;
-        --radius-lg: 14px;
-        --radius-md: 10px;
-        --radius-pill: 999px;
-        --shadow-soft: 0 14px 40px rgba(15, 23, 42, 0.08);
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: system-ui, sans-serif;
-        background: radial-gradient(circle at top left, #eff6ff, #f9fafb);
-        display: flex;
-        height: 100vh;
-        color: var(--text-main);
-      }
-
-      .container {
-        display: grid;
-        grid-template-columns: 280px 1fr;
-        width: 100%;
-        height: 100vh;
-      }
-
-      .sidebar {
-        background-color: var(--bg-surface);
-        padding: 24px;
-        border-right: 1px solid var(--border-subtle);
-        box-shadow: var(--shadow-soft);
-      }
-
-      .main {
-        padding: 24px;
-        overflow-y: auto;
-      }
-
-      h2, h3 {
-        margin-top: 0;
-      }
-
-      .section {
-        background-color: #ffffff;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        margin-bottom: 20px;
-        box-shadow: var(--shadow-soft);
-      }
-
-      .section-header {
-        background-color: var(--accent-soft);
-        padding: 12px 16px;
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        cursor: pointer;
-        font-weight: 600;
-      }
-
-      .section-content {
-        display: none;
-        padding: 16px;
-      }
-
-      label {
-        font-size: 14px;
-        font-weight: 500;
-        display: block;
-        margin-top: 12px;
-      }
-
-      textarea {
-        width: 100%;
-        height: 60px;
-        padding: 8px;
-        margin-top: 4px;
-        font-size: 14px;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        resize: vertical;
-      }
-
-      .output-box {
-        background-color: #ecfdf5;
-        border-left: 4px solid #10b981;
-        padding: 12px;
-        margin-top: 12px;
-        white-space: pre-wrap;
-        font-size: 14px;
-      }
-
-      button {
-        background-color: var(--accent);
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: var(--radius-pill);
-        cursor: pointer;
-        margin-top: 16px;
-        font-size: 14px;
-      }
-
-      button:hover {
-        background-color: var(--accent-strong);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="sidebar">
-        <h3>Deal 정보</h3>
-        <div id="deal-info"></div>
-      </div>
-      <div class="main">
-        <h2>Discovery 입력</h2>
-        <div id="phases"></div>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Discovery - BADA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      display: flex;
+      height: 100vh;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+    .sidebar {
+      width: 25%;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    }
+    .main {
+      width: 75%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background-color: #ffffff;
+    }
+    .section-header {
+      background-color: #f3f4f6;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 10px 10px 0 0;
+      font-weight: bold;
+    }
+    .section-content {
+      display: none;
+      padding: 15px;
+    }
+    textarea {
+      width: 100%;
+      height: 50px;
+      margin-bottom: 10px;
+      resize: vertical;
+    }
+    .output-box {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #ecfdf5;
+      border-left: 4px solid #10b981;
+    }
+    button {
+      background-color: #10b981;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h3>Deal 정보</h3>
+      <div id="deal-info"></div>
     </div>
-  </body>
+    <div class="main">
+      <h2>Discovery 입력</h2>
+      <div id="phases"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("DOMContentLoaded 실행됨");
+
+      // ---------- Deal ID 로딩 ----------
+      const dealID = new URLSearchParams(window.location.search).get("dealId");
+      console.log("dealId:", dealID);
+
+      const dealsRaw = localStorage.getItem("bada_deals");
+      const deals = dealsRaw ? JSON.parse(dealsRaw) : {};
+      const dealData = deals[dealID];
+      window.dealData = dealData;
+
+      const dealInfoEl = document.getElementById("deal-info");
+
+      // ---------- Deal Info 표시 ----------
+      if (dealData?.meta) {
+        const m = dealData.meta;
+        dealInfoEl.innerHTML = `
+          <p><strong>Deal 이름:</strong> ${m.dealName || "(입력 없음)"}</p>
+          <p><strong>고객사:</strong> ${m.customerName || "(입력 없음)"}</p>
+          <p><strong>고객 담당자:</strong> ${m.buyerPersona || "(입력 없음)"}</p>
+          <p><strong>솔루션:</strong> ${m.solutionName || "(입력 없음)"}</p>
+          <p><strong>단계:</strong> ${m.stage || "(입력 없음)"}</p>
+          <p><strong>자사 담당자:</strong> ${m.ownerName || "(입력 없음)"}</p>
+          <p><strong>메모:</strong> ${m.note || "(입력 없음)"}</p>
+        `;
+      } else {
+        dealInfoEl.innerHTML = "<p>⚠️ Deal 정보를 불러올 수 없습니다.</p>";
+      }
+
+      // ---------- Discovery 단계 생성 ----------
+      const phaseNames = ["인식", "고려", "평가", "구매"];
+      const questions = ["고객 행동", "고객 감정", "고객 접점", "고객 문제"];
+
+      const phasesEl = document.getElementById("phases");
+
+      phaseNames.forEach((phase, idx) => {
+        const section = document.createElement("div");
+        section.className = "section";
+
+        const header = document.createElement("div");
+        header.className = "section-header";
+        header.innerText = phase;
+
+        const content = document.createElement("div");
+        content.className = "section-content";
+        if (idx === 0) content.style.display = "block";
+
+        header.onclick = () => {
+          content.style.display = content.style.display === "none" ? "block" : "none";
+        };
+
+        const inputs = {};
+
+        questions.forEach((q) => {
+          const label = document.createElement("label");
+          label.innerText = q;
+
+          const textarea = document.createElement("textarea");
+          textarea.placeholder = `${phase} 단계의 ${q}`;
+          inputs[q] = textarea;
+
+          content.appendChild(label);
+          content.appendChild(textarea);
+        });
+
+        const btn = document.createElement("button");
+        btn.innerText = "Insight 생성";
+        btn.onclick = async () => {
+          const inputText = questions.map((q) => `${q}: ${inputs[q].value}`).join("\n");
+          const prompt = `다음은 ${phase} 단계의 고객 정보입니다.\n${inputText}\n이 고객의 하려는 일(JTBD)과 To-Do를 작성해줘.`;
+
+          const response = await callGemini(prompt);
+
+          const jtbd = document.createElement("div");
+          jtbd.className = "output-box";
+          jtbd.innerText = `고객 JTBD:\n${response.jtbd}`;
+
+          const todo = document.createElement("div");
+          todo.className = "output-box";
+          todo.innerText = `판매자 To-Do:\n${response.todo}`;
+
+          content.appendChild(jtbd);
+          content.appendChild(todo);
+        };
+
+        content.appendChild(btn);
+        section.appendChild(header);
+        section.appendChild(content);
+        phasesEl.appendChild(section);
+      });
+
+      // ---------- Gemini API ----------
+      async function callGemini(prompt) {
+        const apiKey = "YOUR_GEMINI_API_KEY"; // 실제 키 입력
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+
+        const body = {
+          contents: [{ parts: [{ text: prompt }] }],
+        };
+
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+          const result = await res.json();
+          const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          const [jtbd, todo] = text.split("판매자 To-Do:");
+
+          return {
+            jtbd: jtbd?.replace("고객 JTBD:", "").trim() || "(JTBD 없음)",
+            todo: todo?.trim() || "(To-Do 없음)",
+          };
+        } catch (e) {
+          console.error("[Gemini 호출 오류]", e);
+          return { jtbd: "[오류 발생]", todo: "" };
+        }
+      }
+    });
+  </script>
+
+</body>
 </html>
