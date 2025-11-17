@@ -912,259 +912,222 @@
                   </div>
                 </div>
               </div>
-              <div class="section-body" id="dealWinSectionBody">
-                <div class="grid-two">
-                  <div>
-                    <table class="score-table">
-                      <caption>
-                        각 항목에 1~5 점을 부여하세요. (5점이 가장 우수)
-                      </caption>
-                      <thead>
-                        <tr>
-                          <th style="width:25%;">Deal 항목</th>
-                          <th style="width:40%;">세부 항목</th>
-                          <th style="width:20%;">점수</th>
-                          <th style="width:15%;">i</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr class="group-row">
-                          <td>Budget</td>
-                          <td colspan="3">예산 및 구매 준비도</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>예산 및 구매 준비도</td>
-                          <td>
-                            <select data-dw-score="budgetReadiness">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-authority-champion">i
-                              <div class="tooltip" id="tt-authority-champion">
-                                <div class="tooltip-title">Authority · 내부 지지자 파워</div>
-                                <div class="tooltip-line"><span>5점</span> · 파워 챔피언 / 적극적 지지 / 내부 추진 강함</div>
-                                <div class="tooltip-line"><span>4점</span> · 중간 관리자급 챔피언 / 영향력 높음</div>
-                                <div class="tooltip-line"><span>3점</span> · 실무 리더급 챔피언 / 내부 논의 주도 가능</div>
-                                <div class="tooltip-line"><span>2점</span> · 챔피언 후보 있으나 영향력 약함</div>
-                                <div class="tooltip-line"><span>1점</span> · 챔피언 없음 / 단순 관심자</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>의사결정권자 접근성</td>
-                          <td>
-                            <select data-dw-score="authorityAccess">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-authority-access">i
-                              <div class="tooltip" id="tt-authority-access">
-                                <div class="tooltip-title">Authority · 의사결정권자 접근성</div>
-                                <div class="tooltip-line"><span>5점</span> · EB와 직접 대화 / 니즈·우선순위 확인됨</div>
-                                <div class="tooltip-line"><span>4점</span> · 영향력 있는 관리자 접촉 / EB 경로 확보</div>
-                                <div class="tooltip-line"><span>3점</span> · 의사결정 구조 파악 / EB 접촉 가능성 존재</div>
-                                <div class="tooltip-line"><span>2점</span> · EB는 알지만 접촉 불가 / 간접 정보만 있음</div>
-                                <div class="tooltip-line"><span>1점</span> · EB가 누구인지 모름 / 접근 불가</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
+              <table class="score-table">
+  <caption>
+    각 항목에 1~5 점을 부여하세요. (5점이 가장 우수)
+  </caption>
+  <thead>
+    <tr>
+      <th style="width:25%;">Deal 항목</th>
+      <th style="width:40%;">세부 항목</th>
+      <th style="width:20%;">점수</th>
+      <th style="width:15%;">i</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="group-row">
+      <td>Budget</td>
+      <td colspan="3">예산 및 구매 준비도</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>예산 및 구매 준비도</td>
+      <td>
+        <select data-dw-score="budgetReadiness">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-budget-readiness">i
+          <div class="tooltip" id="tt-budget-readiness">
+            <div class="tooltip-title">Budget · 예산 및 구매 준비도</div>
+            <div class="tooltip-line"><span>5점</span> · 예산 확정 / 승인권자 동의 / 구매 절차 명확</div>
+            <div class="tooltip-line"><span>4점</span> · 예산 거의 확정, 내부 승인 절차만 남은 상태</div>
+            <div class="tooltip-line"><span>3점</span> · 예산 가능하나 승인 필요 / 가격 민감 / 불확실</div>
+            <div class="tooltip-line"><span>2점</span> · 예산 후보 수준 / 우선순위 낮음 / 축소 가능성 있음</div>
+            <div class="tooltip-line"><span>1점</span> · 예산 없음 / 승인 의사 없음</div>
+          </div>
+        </div>
+      </td>
+    </tr>
 
-                        <tr class="group-row">
-                          <td>Need</td>
-                          <td colspan="3">문제 적합성 &amp; 경쟁 구도</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>문제 적합성</td>
-                          <td>
-                            <select data-dw-score="needFit">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-need-fit">i
-                              <div class="tooltip" id="tt-need-fit">
-                                <div class="tooltip-title">Need · 문제 적합성</div>
-                                <div class="tooltip-line"><span>5점</span> · 핵심 Pain / 우리 솔루션이 가장 적합</div>
-                                <div class="tooltip-line"><span>4점</span> · 주요 Pain에 적합 / 일부 보완 필요</div>
-                                <div class="tooltip-line"><span>3점</span> · 문제 명확 / 솔루션으로 해결 가능</div>
-                                <div class="tooltip-line"><span>2점</span> · 문제는 있으나 Fit 낮음 / 고객도 확신 없음</div>
-                                <div class="tooltip-line"><span>1점</span> · 문제 모호 / 솔루션과 연결 약함</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>경쟁 구도</td>
-                          <td>
-                            <select data-dw-score="needCompetition">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-need-competition">i
-                              <div class="tooltip" id="tt-need-competition">
-                                <div class="tooltip-title">Need · 경쟁 구도</div>
-                                <div class="tooltip-line"><span>5점</span> · 사실상 우리 선택 / PoC 시 확정 수준</div>
-                                <div class="tooltip-line"><span>4점</span> · 여러 면에서 우리가 우위</div>
-                                <div class="tooltip-line"><span>3점</span> · 비슷비슷 / 비교 초기</div>
-                                <div class="tooltip-line"><span>2점</span> · 경쟁 우세 / 우리 쪽 약함</div>
-                                <div class="tooltip-line"><span>1점</span> · 경쟁사 우위 / 고객 선호도 낮음</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
+    <tr class="group-row">
+      <td>Authority</td>
+      <td colspan="3">내부 지지자 파워 &amp; 의사결정권자 접근성</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>내부 지지자 파워</td>
+      <td>
+        <select data-dw-score="authorityChampion">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-authority-champion">i
+          <div class="tooltip" id="tt-authority-champion">
+            <div class="tooltip-title">Authority · 내부 지지자 파워</div>
+            <div class="tooltip-line"><span>5점</span> · 파워 챔피언 / 적극적 지지 / 내부 추진 강함</div>
+            <div class="tooltip-line"><span>4점</span> · 중간 관리자급 챔피언 / 영향력 높음</div>
+            <div class="tooltip-line"><span>3점</span> · 실무 리더급 챔피언 / 내부 논의 주도 가능</div>
+            <div class="tooltip-line"><span>2점</span> · 챔피언 후보 있으나 영향력 약함</div>
+            <div class="tooltip-line"><span>1점</span> · 챔피언 없음 / 단순 관심자</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>의사결정권자 접근성</td>
+      <td>
+        <select data-dw-score="authorityAccess">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-authority-access">i
+          <div class="tooltip" id="tt-authority-access">
+            <div class="tooltip-title">Authority · 의사결정권자 접근성</div>
+            <div class="tooltip-line"><span>5점</span> · EB와 직접 대화 / 니즈·우선순위 확인됨</div>
+            <div class="tooltip-line"><span>4점</span> · 영향력 있는 관리자 접촉 / EB 경로 확보</div>
+            <div class="tooltip-line"><span>3점</span> · 의사결정 구조 파악 / EB 접촉 가능성 존재</div>
+            <div class="tooltip-line"><span>2점</span> · EB는 알지만 접촉 불가 / 간접 정보만 있음</div>
+            <div class="tooltip-line"><span>1점</span> · EB가 누구인지 모름 / 접근 불가</div>
+          </div>
+        </div>
+      </td>
+    </tr>
 
-                        <tr class="group-row">
-                          <td>Timeline</td>
-                          <td colspan="3">시급성/타이밍 &amp; 도입 용이성</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>시급성/타이밍</td>
-                          <td>
-                            <select data-dw-score="timelineUrgency">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-timeline-urgency">i
-                              <div class="tooltip" id="tt-timeline-urgency">
-                                <div class="tooltip-title">Timeline · 시급성/타이밍</div>
-                                <div class="tooltip-line"><span>5점</span> · 즉시 필요 / 계약·규제 등 긴급 사유</div>
-                                <div class="tooltip-line"><span>4점</span> · 프로젝트 일정과 연결 / 조만간 결정 필요</div>
-                                <div class="tooltip-line"><span>3점</span> · 분기 내 검토 필요 / 일정 일부 존재</div>
-                                <div class="tooltip-line"><span>2점</span> · 관심은 있으나 일정 불확실</div>
-                                <div class="tooltip-line"><span>1점</span> · 급하지 않음 / 계획 없음</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>도입 용이성</td>
-                          <td>
-                            <select data-dw-score="timelineEase">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-timeline-ease">i
-                              <div class="tooltip" id="tt-timeline-ease">
-                                <div class="tooltip-title">Timeline · 도입 용이성</div>
-                                <div class="tooltip-line"><span>5점</span> · 즉시 사용 가능 / 리스크 거의 없음</div>
-                                <div class="tooltip-line"><span>4점</span> · 도입 쉬움 / 통합 간단</div>
-                                <div class="tooltip-line"><span>3점</span> · 일반적 난이도 / 보통 수준</div>
-                                <div class="tooltip-line"><span>2점</span> · 장벽 있지만 가능 / 리스크 존재</div>
-                                <div class="tooltip-line"><span>1점</span> · 기술적 장애 큼 / 통합 어려움</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div>
-                    <div class="weight-card">
-                      <div class="weight-card-header">
-                        <div class="weight-card-title">가중치 설정</div>
-                        <span class="pill-muted">합계 = 1.00</span>
-                      </div>
-
-                      <div class="weight-row">
-                        <span>Budget</span>
-                        <div class="weight-controls">
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightBudget" data-delta="-0.01">−</button>
-                          <input type="number" step="0.01" class="weight-input"
-                            id="dwWeightBudget" value="0.30" />
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightBudget" data-delta="0.01">+</button>
-                        </div>
-                      </div>
-
-                      <div class="weight-row">
-                        <span>Need</span>
-                        <div class="weight-controls">
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightNeed" data-delta="-0.01">−</button>
-                          <input type="number" step="0.01" class="weight-input"
-                            id="dwWeightNeed" value="0.30" />
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightNeed" data-delta="0.01">+</button>
-                        </div>
-                      </div>
-
-                      <div class="weight-row">
-                        <span>Authority</span>
-                        <div class="weight-controls">
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightAuthority" data-delta="-0.01">−</button>
-                          <input type="number" step="0.01" class="weight-input"
-                            id="dwWeightAuthority" value="0.25" />
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightAuthority" data-delta="0.01">+</button>
-                        </div>
-                      </div>
-
-                      <div class="weight-row">
-                        <span>Timeline</span>
-                        <div class="weight-controls">
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightTimeline" data-delta="-0.01">−</button>
-                          <input type="number" step="0.01" class="weight-input"
-                            id="dwWeightTimeline" value="0.15" />
-                          <button type="button" class="weight-btn"
-                            data-target="dwWeightTimeline" data-delta="0.01">+</button>
-                        </div>
-                      </div>
-
-                      <div id="dwWeightSumText" class="weight-sum">
-                        합계: 1.00
-                      </div>
-                      <div class="helper-text">
-                        가중치의 합은 100%(1)입니다. 합계가 1을 넘거나 모자라면 결과 계산이 비활성화됩니다.
-                      </div>
-                    </div>
-                  </div>
-                </div>
+    <tr class="group-row">
+      <td>Need</td>
+      <td colspan="3">문제 적합성 &amp; 경쟁 구도</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>문제 적합성</td>
+      <td>
+        <select data-dw-score="needFit">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-need-fit">i
+          <div class="tooltip" id="tt-need-fit">
+            <div class="tooltip-title">Need · 문제 적합성</div>
+            <div class="tooltip-line"><span>5점</span> · 핵심 Pain / 우리 솔루션이 가장 적합</div>
+            <div class="tooltip-line"><span>4점</span> · 주요 Pain에 적합 / 일부 보완 필요</div>
+            <div class="tooltip-line"><span>3점</span> · 문제 명확 / 솔루션으로 해결 가능</div>
+            <div class="tooltip-line"><span>2점</span> · 문제는 있으나 Fit 낮음 / 고객도 확신 없음</div>
+            <div class="tooltip-line"><span>1점</span> · 문제 모호 / 솔루션과 연결 약함</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>경쟁 구도</td>
+      <td>
+        <select data-dw-score="needCompetition">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-need-competition">i
+          <div class="tooltip" id="tt-need-competition">
+            <div class="tooltip-title">Need · 경쟁 구도</div>
+            <div class="tooltip-line"><span>5점</span> · 사실상 우리 선택 / PoC 시 확정 수준</div>
+            <div class="tooltip-line"><span>4점</span> · 여러 면에서 우리가 우위</div>
+            <div class="tooltip-line"><span>3점</span> · 비슷비슷 / 비교 초기</div>
+            <div class="tooltip-line"><span>2점</span> · 경쟁 우세 / 우리 쪽 약함</div>
+            <div class="tooltip-line"><span>1점</span> · 경쟁사 우위 / 고객 선호도 낮음</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    
+    <tr class="group-row">
+      <td>Timeline</td>
+      <td colspan="3">시급성/타이밍 &amp; 도입 용이성</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>시급성/타이밍</td>
+      <td>
+        <select data-dw-score="timelineUrgency">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-timeline-urgency">i
+          <div class="tooltip" id="tt-timeline-urgency">
+            <div class="tooltip-title">Timeline · 시급성/타이밍</div>
+            <div class="tooltip-line"><span>5점</span> · 즉시 필요 / 계약·규제 등 긴급 사유</div>
+            <div class="tooltip-line"><span>4점</span> · 프로젝트 일정과 연결 / 조만간 결정 필요</div>
+            <div class="tooltip-line"><span>3점</span> · 분기 내 검토 필요 / 일정 일부 존재</div>
+            <div class="tooltip-line"><span>2점</span> · 관심은 있으나 일정 불확실</div>
+            <div class="tooltip-line"><span>1점</span> · 급하지 않음 / 계획 없음</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>도입 용이성</td>
+      <td>
+        <select data-dw-score="timelineEase">
+          <option value="">-</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </td>
+      <td>
+        <div class="info-icon" data-tooltip-id="tt-timeline-ease">i
+          <div class="tooltip" id="tt-timeline-ease">
+            <div class="tooltip-title">Timeline · 도입 용이성</div>
+            <div class="tooltip-line"><span>5점</span> · 즉시 사용 가능 / 리스크 거의 없음</div>
+            <div class="tooltip-line"><span>4점</span> · 도입 쉬움 / 통합 간단</div>
+            <div class="tooltip-line"><span>3점</span> · 일반적 난이도 / 보통 수준</div>
+            <div class="tooltip-line"><span>2점</span> · 장벽 있지만 가능 / 리스크 존재</div>
+            <div class="tooltip-line"><span>1점</span> · 기술적 장애 큼 / 통합 어려움</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
                 <div class="section-footer">
                   <div class="helper-text">
