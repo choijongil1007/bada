@@ -2066,9 +2066,7 @@
       document.getElementById("techFitSection").style.display = "none";
       document.getElementById("techFitSummaryBar").style.display = "flex";
 
-      document.getElementById("dashboardSectionWrapper").style.display = "";
-      updateDashboard();
-
+      // currentDeal 객체에 데이터 저장
       if (!currentDeal) currentDeal = {};
       currentDeal.techScore = techScoreRounded;
       currentDeal.techRisk = riskLevel;
@@ -2081,6 +2079,12 @@
         human: humanSum,
       };
       currentDeal.techRiskSummary = risks;
+
+      console.log("Tech Fit 계산 완료. currentDeal:", currentDeal);
+
+      // Dashboard 표시 및 업데이트
+      document.getElementById("dashboardSectionWrapper").style.display = "";
+      updateDashboard();
 
       saveDQResults();
       updateProgress();
@@ -2180,9 +2184,24 @@
     }
 
     function updateDashboard() {
-      if (!currentDeal) return;
-      const { dealScore, winProb, winProbLabel, techScore, techRisk, techRiskLabel } = currentDeal;
-      if (dealScore == null || techScore == null) return;
+      if (!currentDeal) {
+        console.log("currentDeal이 없습니다");
+        return;
+      }
+      
+      const dealScore = currentDeal.dealScore;
+      const winProb = currentDeal.winProb;
+      const winProbLabel = currentDeal.winProbLabel;
+      const techScore = currentDeal.techScore;
+      const techRisk = currentDeal.techRisk;
+      const techRiskLabel = currentDeal.techRiskLabel;
+      
+      console.log("Dashboard 업데이트:", { dealScore, winProb, techScore, techRisk });
+      
+      if (dealScore == null || techScore == null) {
+        console.log("점수가 없습니다:", dealScore, techScore);
+        return;
+      }
 
       const m = currentDeal.meta;
       document.getElementById("dashDealName").textContent = m.dealName || "-";
