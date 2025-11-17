@@ -921,10 +921,10 @@
                       </caption>
                       <thead>
                         <tr>
-                          <th style="width:40%;">Deal 항목</th>
+                          <th style="width:25%;">Deal 항목</th>
                           <th style="width:40%;">세부 항목</th>
-                          <th style="width:10%;">점수</th>
-                          <th style="width:10%;">i</th>
+                          <th style="width:20%;">점수</th>
+                          <th style="width:15%;">i</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -937,37 +937,6 @@
                           <td>예산 및 구매 준비도</td>
                           <td>
                             <select data-dw-score="budgetReadiness">
-                              <option value="">-</option>
-                              <option value="5">5</option>
-                              <option value="4">4</option>
-                              <option value="3">3</option>
-                              <option value="2">2</option>
-                              <option value="1">1</option>
-                            </select>
-                          </td>
-                          <td>
-                            <div class="info-icon" data-tooltip-id="tt-budget-readiness">i
-                              <div class="tooltip" id="tt-budget-readiness">
-                                <div class="tooltip-title">Budget · 예산 및 구매 준비도</div>
-                                <div class="tooltip-line"><span>5점</span> · 예산 확정 / 승인권자 동의 / 구매 절차 명확</div>
-                                <div class="tooltip-line"><span>4점</span> · 예산 거의 확정, 내부 승인 절차만 남은 상태</div>
-                                <div class="tooltip-line"><span>3점</span> · 예산 가능하나 승인 필요 / 가격 민감 / 불확실</div>
-                                <div class="tooltip-line"><span>2점</span> · 예산 후보 수준 / 우선순위 낮음 / 축소 가능성 있음</div>
-                                <div class="tooltip-line"><span>1점</span> · 예산 없음 / 승인 의사 없음</div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-
-                        <tr class="group-row">
-                          <td>Authority</td>
-                          <td colspan="3">내부 지지자 파워 &amp; 의사결정권자 접근성</td>
-                        </tr>
-                        <tr>
-                          <td></td>
-                          <td>내부 지지자 파워</td>
-                          <td>
-                            <select data-dw-score="authorityChampion">
                               <option value="">-</option>
                               <option value="5">5</option>
                               <option value="4">4</option>
@@ -1267,10 +1236,10 @@
                       </caption>
                       <thead>
                         <tr>
-                          <th style="width:40%;">적합성 항목</th>
+                          <th style="width:25%;">적합성 항목</th>
                           <th style="width:40%;">세부 항목</th>
-                          <th style="width:10%;">점수</th>
-                          <th style="width:10%;">i</th>
+                          <th style="width:20%;">점수</th>
+                          <th style="width:15%;">i</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1710,7 +1679,7 @@
           </div>
 
           <!-- Dashboard -->
-          <div class="section">
+          <div class="section" id="dashboardSectionWrapper" style="display:none;">
             <div class="section-card" id="dashboardSection">
               <div class="section-header">
                 <div>
@@ -1795,7 +1764,6 @@
 
     // ===== Core Functions =====
     function showModal(title, body) {
-      // 간단한 alert로 대체 (기존 modal 코드 제거)
       alert(`${title}\n\n${body}`);
     }
 
@@ -1960,11 +1928,9 @@
 
       document.getElementById("dealWinResultArea").style.display = "";
 
-      // 섹션은 접고 한 줄 요약만 노출
       document.getElementById("dealWinSection").style.display = "none";
       document.getElementById("dealWinSummaryBar").style.display = "flex";
 
-      // Technical Fit 섹션 오픈
       document.getElementById("techFitSection").style.display = "";
 
       showModal(
@@ -1985,7 +1951,6 @@
       };
       currentDeal.dealWinRiskSummary = risks;
 
-      // 저장
       saveDQResults();
       updateProgress();
     }
@@ -2098,11 +2063,10 @@
 
       document.getElementById("techFitResultArea").style.display = "";
 
-      // 섹션 접고 한 줄 요약만
       document.getElementById("techFitSection").style.display = "none";
       document.getElementById("techFitSummaryBar").style.display = "flex";
 
-      // Dashboard 업데이트 및 Quadrant 그리기
+      document.getElementById("dashboardSectionWrapper").style.display = "";
       updateDashboard();
 
       if (!currentDeal) currentDeal = {};
@@ -2118,7 +2082,6 @@
       };
       currentDeal.techRiskSummary = risks;
 
-      // 저장
       saveDQResults();
       updateProgress();
 
@@ -2148,47 +2111,36 @@
 
       ctx.clearRect(0, 0, width, height);
 
-      // 배경
       ctx.fillStyle = "#f9fafb";
       ctx.fillRect(0, 0, width, height);
 
-      // Quadrant 배경 색 (연한 톤)
       const midX = margin + plotWidth / 2;
       const midY = margin + plotHeight / 2;
 
-      // 좌상 (Tech OK but Biz Weak)
-      ctx.fillStyle = "#E3F2FD"; // 연한 파랑
+      ctx.fillStyle = "#E3F2FD";
       ctx.fillRect(margin, margin, plotWidth / 2, plotHeight / 2);
 
-      // 우상 (Go)
-      ctx.fillStyle = "#E8F5E9"; // 연한 초록
+      ctx.fillStyle = "#E8F5E9";
       ctx.fillRect(midX, margin, plotWidth / 2, plotHeight / 2);
 
-      // 좌하 (No-Go)
-      ctx.fillStyle = "#FDECEA"; // 연한 빨강
+      ctx.fillStyle = "#FDECEA";
       ctx.fillRect(margin, midY, plotWidth / 2, plotHeight / 2);
 
-      // 우하 (Biz OK but Tech Risk)
-      ctx.fillStyle = "#FFF8E1"; // 연한 노랑
+      ctx.fillStyle = "#FFF8E1";
       ctx.fillRect(midX, midY, plotWidth / 2, plotHeight / 2);
 
-      // 축
       ctx.strokeStyle = "#9ca3af";
       ctx.lineWidth = 1;
       ctx.beginPath();
-      // X축
       ctx.moveTo(margin, midY);
       ctx.lineTo(margin + plotWidth, midY);
-      // Y축
       ctx.moveTo(midX, margin);
       ctx.lineTo(midX, margin + plotHeight);
       ctx.stroke();
 
-      // 테두리
       ctx.strokeStyle = "#d1d5db";
       ctx.strokeRect(margin, margin, plotWidth, plotHeight);
 
-      // 축 라벨
       ctx.fillStyle = "#4b5563";
       ctx.font = "11px system-ui";
       ctx.fillText("Business Fit (Deal Win Score)", margin, height - 6);
@@ -2198,23 +2150,17 @@
       ctx.fillText("Technical Fit Score", 0, 0);
       ctx.restore();
 
-      // Quadrant 라벨
       ctx.font = "11px system-ui";
 
-      // 좌상
       ctx.fillStyle = "#5DADE2";
       ctx.fillText("Tech OK but Biz Weak", margin + 6, margin + 14);
-      // 우상
       ctx.fillStyle = "#4CAF50";
       ctx.fillText("Go", midX + 6, margin + 14);
-      // 좌하
       ctx.fillStyle = "#C0392B";
       ctx.fillText("No-Go", margin + 6, midY + 14);
-      // 우하
       ctx.fillStyle = "#F4C542";
       ctx.fillText("Biz OK but Tech Risk", midX + 6, midY + 14);
 
-      // Deal 위치 점
       const clampedBiz = Math.max(0, Math.min(100, bizScore || 0));
       const clampedTech = Math.max(0, Math.min(100, techScore || 0));
 
@@ -2238,6 +2184,10 @@
       const { dealScore, winProb, winProbLabel, techScore, techRisk, techRiskLabel } = currentDeal;
       if (dealScore == null || techScore == null) return;
 
+      const m = currentDeal.meta;
+      document.getElementById("dashDealName").textContent = m.dealName || "-";
+      document.getElementById("dashDealDescription").textContent = m.note || "";
+
       document.getElementById("dashDealScore").textContent =
         dealScore.toFixed(1) + "%";
       document.getElementById("dashWinProb").textContent =
@@ -2248,7 +2198,6 @@
       document.getElementById("dashTechRisk").textContent =
         `Risk ${techRisk} (${techRiskLabel})`;
 
-      // Quadrant zone 분석
       let zone = "No-Go Zone";
       let zoneColor = "#C0392B";
       if (dealScore >= 50 && techScore >= 50) {
@@ -2342,10 +2291,9 @@
     }
 
     function updateProgress() {
-      const totalFields = 19; // Business Fit 7 + Technical Fit 12
+      const totalFields = 19;
       let filledFields = 0;
 
-      // Business Fit 필드 체크
       const dwFields = [
         "budgetReadiness", "authorityChampion", "authorityAccess", 
         "needFit", "needCompetition", "timelineUrgency", "timelineEase"
@@ -2354,7 +2302,6 @@
         if (getSelectValue(field, "dw") !== null) filledFields++;
       });
 
-      // Technical Fit 필드 체크
       const tfFields = [
         "tfFunctional", "tfCustomization", "tfLegacy",
         "envInfra", "envIntegration", "envNetwork",
@@ -2369,7 +2316,6 @@
       document.getElementById("progress-fill").style.width = `${percentage}%`;
     }
 
-    // ===== UI Rendering =====
     function renderDealInfo() {
       const dealInfoEl = document.getElementById("deal-info");
       const m = currentDeal.meta;
@@ -2393,10 +2339,6 @@
         `
         )
         .join("");
-
-      // Dashboard에도 Deal 정보 표시
-      document.getElementById("dashDealName").textContent = m.dealName || "-";
-      document.getElementById("dashDealDescription").textContent = m.note || "";
     }
 
     function loadExistingDQData() {
@@ -2404,9 +2346,7 @@
 
       const dq = currentDeal.dq;
 
-      // Business Fit 데이터 로드
       if (dq.dealWinGroups) {
-        // 점수 데이터는 UI에 직접 반영하기 어려워 결과만 표시
         if (dq.dealScore) {
           document.getElementById("dealScoreValue").textContent = dq.dealScore.toFixed(1) + "%";
           document.getElementById("winProbValue").textContent = dq.winProb + "% (" + dq.winProbLabel + ")";
@@ -2417,7 +2357,6 @@
           document.getElementById("dealWinSummaryBar").style.display = "flex";
         }
 
-        // Risk 데이터 로드
         if (dq.dealWinRiskSummary) {
           const riskList = document.getElementById("dealWinRiskList");
           riskList.innerHTML = "";
@@ -2429,7 +2368,6 @@
         }
       }
 
-      // Technical Fit 데이터 로드
       if (dq.techGroups) {
         if (dq.techScore) {
           document.getElementById("techScoreValue").textContent = dq.techScore.toFixed(1) + "%";
@@ -2452,18 +2390,15 @@
         }
       }
 
-      // Dashboard 데이터 로드
       if (dq.dealScore && dq.techScore) {
+        document.getElementById("dashboardSectionWrapper").style.display = "";
         updateDashboard();
       }
     }
 
-    // ===== Event Handlers =====
     function setupEventListeners() {
-      // Deal Win 결과 버튼
       document.getElementById("dealWinResultButton").addEventListener("click", computeDealWinScore);
 
-      // Tech Fit 결과 버튼
       document.getElementById("techFitResultButton").addEventListener("click", () => {
         if (!currentDeal || currentDeal.dealScore == null) {
           showModal("순서 안내", "먼저 Deal Win Score를 계산한 뒤 Technical Fit Score를 계산해 주세요.");
@@ -2472,7 +2407,6 @@
         computeTechFitScore();
       });
 
-      // 요약 바 토글
       document.querySelectorAll(".summary-toggle-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           const targetId = btn.dataset.target;
@@ -2484,7 +2418,6 @@
         });
       });
 
-      // Tooltip
       document.querySelectorAll(".info-icon").forEach((icon) => {
         const ttId = icon.dataset.tooltipId;
         const tooltip = document.getElementById(ttId);
@@ -2497,7 +2430,6 @@
         });
       });
 
-      // 자동 저장 (선택사항)
       document.querySelectorAll('select').forEach(select => {
         select.addEventListener('change', () => {
           updateProgress();
@@ -2505,7 +2437,6 @@
       });
     }
 
-    // ===== 초기화 =====
     document.addEventListener("DOMContentLoaded", () => {
       dealId = new URLSearchParams(window.location.search).get("dealId");
       
@@ -2524,7 +2455,6 @@
         return;
       }
 
-      // DQ 데이터 초기화
       if (!currentDeal.dq) {
         currentDeal.dq = {};
       }
@@ -2549,4 +2479,34 @@
     });
   </script>
 </body>
-</html>
+</html><option value="2">2</option>
+                              <option value="1">1</option>
+                            </select>
+                          </td>
+                          <td>
+                            <div class="info-icon" data-tooltip-id="tt-budget-readiness">i
+                              <div class="tooltip" id="tt-budget-readiness">
+                                <div class="tooltip-title">Budget · 예산 및 구매 준비도</div>
+                                <div class="tooltip-line"><span>5점</span> · 예산 확정 / 승인권자 동의 / 구매 절차 명확</div>
+                                <div class="tooltip-line"><span>4점</span> · 예산 거의 확정, 내부 승인 절차만 남은 상태</div>
+                                <div class="tooltip-line"><span>3점</span> · 예산 가능하나 승인 필요 / 가격 민감 / 불확실</div>
+                                <div class="tooltip-line"><span>2점</span> · 예산 후보 수준 / 우선순위 낮음 / 축소 가능성 있음</div>
+                                <div class="tooltip-line"><span>1점</span> · 예산 없음 / 승인 의사 없음</div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr class="group-row">
+                          <td>Authority</td>
+                          <td colspan="3">내부 지지자 파워 &amp; 의사결정권자 접근성</td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>내부 지지자 파워</td>
+                          <td>
+                            <select data-dw-score="authorityChampion">
+                              <option value="">-</option>
+                              <option value="5">5</option>
+                              <option value="4">4</option>
+                              <option value="3">3</option>
