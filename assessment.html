@@ -1879,136 +1879,150 @@
 }
 
     function computeTechFitScore() {
-      const tfFunctional = getSelectValue("tfFunctional", "tf");
-      const tfCustomization = getSelectValue("tfCustomization", "tf");
-      const tfLegacy = getSelectValue("tfLegacy", "tf");
+  const tfFunctional = getSelectValue("tfFunctional", "tf");
+  const tfCustomization = getSelectValue("tfCustomization", "tf");
+  const tfLegacy = getSelectValue("tfLegacy", "tf");
 
-      const envInfra = getSelectValue("envInfra", "tf");
-      const envIntegration = getSelectValue("envIntegration", "tf");
-      const envNetwork = getSelectValue("envNetwork", "tf");
+  const envInfra = getSelectValue("envInfra", "tf");
+  const envIntegration = getSelectValue("envIntegration", "tf");
+  const envNetwork = getSelectValue("envNetwork", "tf");
 
-      const compSecurity = getSelectValue("compSecurity", "tf");
-      const compRegulatory = getSelectValue("compRegulatory", "tf");
-      const compData = getSelectValue("compData", "tf");
+  const compSecurity = getSelectValue("compSecurity", "tf");
+  const compRegulatory = getSelectValue("compRegulatory", "tf");
+  const compData = getSelectValue("compData", "tf");
 
-      const humanTeam = getSelectValue("humanTeam", "tf");
-      const humanSupport = getSelectValue("humanSupport", "tf");
-      const humanTimeline = getSelectValue("humanTimeline", "tf");
+  const humanTeam = getSelectValue("humanTeam", "tf");
+  const humanSupport = getSelectValue("humanSupport", "tf");
+  const humanTimeline = getSelectValue("humanTimeline", "tf");
 
-      const values = [
-        tfFunctional, tfCustomization, tfLegacy,
-        envInfra, envIntegration, envNetwork,
-        compSecurity, compRegulatory, compData,
-        humanTeam, humanSupport, humanTimeline
-      ];
+  const values = [
+    tfFunctional, tfCustomization, tfLegacy,
+    envInfra, envIntegration, envNetwork,
+    compSecurity, compRegulatory, compData,
+    humanTeam, humanSupport, humanTimeline
+  ];
 
-      if (values.some((v) => v == null)) {
-        showModal("입력 오류", "모든 적합성 항목에 점수를 입력해 주세요.");
-        return;
-      }
+  if (values.some((v) => v == null)) {
+    showModal("입력 오류", "모든 적합성 항목에 점수를 입력해 주세요.");
+    return;
+  }
 
-      const technicalFit = avg([tfFunctional, tfCustomization, tfLegacy]);
-      const envIntegrationSum = avg([envInfra, envIntegration, envNetwork]);
-      const complianceSum = avg([compSecurity, compRegulatory, compData]);
-      const humanSum = avg([humanTeam, humanSupport, humanTimeline]);
+  const technicalFit = avg([tfFunctional, tfCustomization, tfLegacy]);
+  const envIntegrationSum = avg([envInfra, envIntegration, envNetwork]);
+  const complianceSum = avg([compSecurity, compRegulatory, compData]);
+  const humanSum = avg([humanTeam, humanSupport, humanTimeline]);
 
-      const wTF = readWeight("tfWeightTechnicalFit");
-      const wEnv = readWeight("tfWeightEnvironment");
-      const wComp = readWeight("tfWeightCompliance");
-      const wHuman = readWeight("tfWeightHuman");
-      const wSum = wTF + wEnv + wComp + wHuman;
-      if (Math.abs(wSum - 1) > 0.001) {
-        showModal("가중치 오류", "Technical Fit 가중치 합계가 1이 아닙니다. 합계를 1로 맞춘 뒤 다시 시도해 주세요.");
-        return;
-      }
+  const wTF = readWeight("tfWeightTechnicalFit");
+  const wEnv = readWeight("tfWeightEnvironment");
+  const wComp = readWeight("tfWeightCompliance");
+  const wHuman = readWeight("tfWeightHuman");
+  const wSum = wTF + wEnv + wComp + wHuman;
+  if (Math.abs(wSum - 1) > 0.001) {
+    showModal("가중치 오류", "Technical Fit 가중치 합계가 1이 아닙니다. 합계를 1로 맞춘 뒤 다시 시도해 주세요.");
+    return;
+  }
 
-      const raw =
-        (wTF * technicalFit) +
-        (wEnv * envIntegrationSum) +
-        (wComp * complianceSum) +
-        (wHuman * humanSum);
+  const raw =
+    (wTF * technicalFit) +
+    (wEnv * envIntegrationSum) +
+    (wComp * complianceSum) +
+    (wHuman * humanSum);
 
-      const techScore = (raw / 5) * 100;
-      const techScoreRounded = Math.max(0, Math.min(100, techScore));
+  const techScore = (raw / 5) * 100;
+  const techScoreRounded = Math.max(0, Math.min(100, techScore));
 
-      let riskLevel = "매우 높음";
-      let riskLabel = "기술적 불가";
-      if (techScoreRounded >= 81) {
-        riskLevel = "매우 낮음";
-        riskLabel = "매우 적합";
-      } else if (techScoreRounded >= 61) {
-        riskLevel = "낮음";
-        riskLabel = "적합함";
-      } else if (techScoreRounded >= 41) {
-        riskLevel = "중간";
-        riskLabel = "주의 필요";
-      } else if (techScoreRounded >= 21) {
-        riskLevel = "높음";
-        riskLabel = "중단 고려";
-      }
+  let riskLevel = "매우 높음";
+  let riskLabel = "기술적 불가";
+  if (techScoreRounded >= 81) {
+    riskLevel = "매우 낮음";
+    riskLabel = "매우 적합";
+  } else if (techScoreRounded >= 61) {
+    riskLevel = "낮음";
+    riskLabel = "적합함";
+  } else if (techScoreRounded >= 41) {
+    riskLevel = "중간";
+    riskLabel = "주의 필요";
+  } else if (techScoreRounded >= 21) {
+    riskLevel = "높음";
+    riskLabel = "중단 고려";
+  }
 
-      document.getElementById("techScoreValue").textContent =
-        techScoreRounded.toFixed(1) + "%";
-      document.getElementById("techRiskValue").textContent =
-        riskLevel + " (" + riskLabel + ")";
+  document.getElementById("techScoreValue").textContent =
+    techScoreRounded.toFixed(1) + "%";
+  document.getElementById("techRiskValue").textContent =
+    riskLevel + " (" + riskLabel + ")";
 
-      const riskList = document.getElementById("techFitRiskList");
-      riskList.innerHTML = "";
-      const risks = [];
+  const riskList = document.getElementById("techFitRiskList");
+  riskList.innerHTML = "";
+  const risks = [];
 
-      if (technicalFit <= 2) {
-        risks.push("Technical Fit 리스크: 기능 적합성/커스터마이징/레거시 제약이 큽니다.");
-      }
-      if (envIntegrationSum <= 2) {
-        risks.push("Environment & Integration 리스크: 인프라/연동/환경 제약이 큽니다.");
-      }
-      if (complianceSum <= 2) {
-        risks.push("Compliance & Security 리스크: 보안·규제·데이터 적합성 리스크가 높습니다.");
-      }
-      if (humanSum <= 2) {
-        risks.push("Human & Execution 리스크: 고객 기술팀·지원 리소스·일정 현실성이 부족합니다.");
-      }
+  if (technicalFit <= 2) {
+    risks.push("Technical Fit 리스크: 기능 적합성/커스터마이징/레거시 제약이 큽니다.");
+  }
+  if (envIntegrationSum <= 2) {
+    risks.push("Environment & Integration 리스크: 인프라/연동/환경 제약이 큽니다.");
+  }
+  if (complianceSum <= 2) {
+    risks.push("Compliance & Security 리스크: 보안·규제·데이터 적합성 리스크가 높습니다.");
+  }
+  if (humanSum <= 2) {
+    risks.push("Human & Execution 리스크: 고객 기술팀·지원 리소스·일정 현실성이 부족합니다.");
+  }
 
-      if (!risks.length) {
-        const li = document.createElement("li");
-        li.textContent = "특별히 눈에 띄는 기술 리스크는 없습니다. 보안·규제·환경은 별도로 다시 점검해 보세요.";
-        riskList.appendChild(li);
-      } else {
-        risks.forEach((r) => {
-          const li = document.createElement("li");
-          li.textContent = r;
-          riskList.appendChild(li);
-        });
-      }
+  if (!risks.length) {
+    const li = document.createElement("li");
+    li.textContent = "특별히 눈에 띄는 기술 리스크는 없습니다. 보안·규제·환경은 별도로 다시 점검해 보세요.";
+    riskList.appendChild(li);
+  } else {
+    risks.forEach((r) => {
+      const li = document.createElement("li");
+      li.textContent = r;
+      riskList.appendChild(li);
+    });
+  }
 
-      document.getElementById("techFitResultArea").style.display = "";
+  document.getElementById("techFitResultArea").style.display = "";
 
-      // currentDeal 객체에 데이터 저장
-      if (!currentDeal) currentDeal = {};
-      currentDeal.techScore = techScoreRounded;
-      currentDeal.techRisk = riskLevel;
-      currentDeal.techRiskLabel = riskLabel;
-      currentDeal.techWeights = { wTF, wEnv, wComp, wHuman };
-      currentDeal.techGroups = {
-        technicalFit,
-        envIntegration: envIntegrationSum,
-        compliance: complianceSum,
-        human: humanSum,
-      };
-      currentDeal.techRiskSummary = risks;
+  // currentDeal 객체에 개별 항목 점수도 저장
+  if (!currentDeal) currentDeal = {};
+  currentDeal.techScore = techScoreRounded;
+  currentDeal.techRisk = riskLevel;
+  currentDeal.techRiskLabel = riskLabel;
+  currentDeal.techWeights = { wTF, wEnv, wComp, wHuman };
+  currentDeal.techGroups = {
+    // 개별 항목 점수 저장
+    tfFunctional: tfFunctional,
+    tfCustomization: tfCustomization,
+    tfLegacy: tfLegacy,
+    envInfra: envInfra,
+    envIntegration: envIntegration,
+    envNetwork: envNetwork,
+    compSecurity: compSecurity,
+    compRegulatory: compRegulatory,
+    compData: compData,
+    humanTeam: humanTeam,
+    humanSupport: humanSupport,
+    humanTimeline: humanTimeline,
+    // 평균값도 유지
+    technicalFitAvg: technicalFit,
+    envIntegrationAvg: envIntegrationSum,
+    complianceAvg: complianceSum,
+    humanAvg: humanSum,
+  };
+  currentDeal.techRiskSummary = risks;
 
-      // Dashboard 표시 및 업데이트
-      document.getElementById("dashboardSectionWrapper").style.display = "";
-      updateDashboard();
+  // Dashboard 표시 및 업데이트
+  document.getElementById("dashboardSectionWrapper").style.display = "";
+  updateDashboard();
 
-      saveDQResults();
-      updateProgress();
+  saveDQResults();
+  updateProgress();
 
-      showModal(
-        "Technical Risk Level",
-        `Technical Fit Score ${techScoreRounded.toFixed(1)}% → Risk Level ${riskLevel} (${riskLabel})`
-      );
-    }
+  showModal(
+    "Technical Risk Level",
+    `Technical Fit Score ${techScoreRounded.toFixed(1)}% → Risk Level ${riskLevel} (${riskLabel})`
+  );
+}
 
     function drawQuadrant(bizScore, techScore) {
       const canvas = document.getElementById("quadrantCanvas");
@@ -2301,6 +2315,17 @@
         .join("");
     }
 
+    // 드롭다운 메뉴에 값을 설정하는 헬퍼 함수 추가
+function setSelectValue(name, type, value) {
+  const selector = type === "dw"
+    ? `select[data-dw-score="${name}"]`
+    : `select[data-tf-score="${name}"]`;
+  const el = document.querySelector(selector);
+  if (el && value !== null && value !== undefined) {
+    el.value = value.toString();
+  }
+}
+    
     function loadExistingDQData() {
   if (!currentDeal.dq) return;
 
