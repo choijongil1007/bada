@@ -777,14 +777,10 @@ ${inputText}
 [To-Do 끝]`;
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyDPgMI-hR_I3wsma_NcGHJB1xksa4yZrHHKCPJbCydS6mw2ZdEFyBRDdWkDuHzmUmidA/exec", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: prompt
-          }),
+        // GET 방식으로 변경 (CORS 우회)
+        const encodedPrompt = encodeURIComponent(prompt);
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyDPgMI-hR_I3wsma_NcGHJB1xksa4yZrHHKCPJbCydS6mw2ZdEFyBRDdWkDuHzmUmidA/exec?prompt=" + encodedPrompt, {
+          method: "GET"
         });
 
         const data = await response.json();
