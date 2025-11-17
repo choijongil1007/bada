@@ -434,6 +434,12 @@
       font-size: 13px;
     }
 
+    .output-todo {
+      background: #f0f9ff;
+      border-left-color: #3b82f6;
+      line-height: 1.8;
+    }
+
     .output-loading {
       background: var(--accent-soft);
       border-left-color: var(--accent);
@@ -721,14 +727,15 @@
         const jtbdKey = `${phaseName}_jtbd`;
         const todoKey = `${phaseName}_todo`;
         if (dealData.discovery[jtbdKey] || dealData.discovery[todoKey]) {
+          const formattedTodo = formatTodoByRole(dealData.discovery[todoKey] || "(생성되지 않음)");
           outputDiv.innerHTML = `
             <div class="output-box">
-              <strong>고객 JTBD (Jobs To Be Done)</strong>
+              <strong>고객이 하려는 일 (JTBD)</strong>
               ${dealData.discovery[jtbdKey] || "(생성되지 않음)"}
             </div>
-            <div class="output-box">
-              <strong>판매자 To-Do</strong>
-              ${dealData.discovery[todoKey] || "(생성되지 않음)"}
+            <div class="output-box output-todo">
+              <strong>판매자의 To-Do (역할별)</strong>
+              ${formattedTodo}
             </div>
           `;
         }
@@ -764,8 +771,16 @@ ${inputText}
 1. 고객이 하려는 일 (JTBD - Jobs To Be Done):
 고객이 이 단계에서 달성하려는 목표와 해결하려는 문제를 3-5줄로 작성
 
-2. 판매자의 To-Do:
-영업 담당자가 이 단계에서 수행해야 할 구체적인 액션 아이템을 3-5줄로 작성
+2. 판매자의 To-Do (역할별로 구체적인 액션 아이템):
+각 역할별로 이 단계에서 수행해야 할 구체적인 액션을 작성해주세요.
+반드시 다음 형식을 사용하세요:
+(프리세일즈) 구체적인 액션 아이템
+(영업) 구체적인 액션 아이템
+(CSM) 구체적인 액션 아이템
+(마케팅) 구체적인 액션 아이템
+(기술지원) 구체적인 액션 아이템
+
+각 역할당 1-2개의 액션을 제시하되, 해당 단계에 적합한 역할의 액션만 포함하세요.
 
 응답 형식:
 [JTBD 시작]
@@ -773,7 +788,9 @@ ${inputText}
 [JTBD 끝]
 
 [To-Do 시작]
-(여기에 To-Do 내용)
+(프리세일즈) 액션 내용
+(영업) 액션 내용
+(CSM) 액션 내용
 [To-Do 끝]`;
 
       try {
@@ -835,14 +852,17 @@ ${inputText}
         saveDealData(`${phaseName}_jtbd`, jtbd);
         saveDealData(`${phaseName}_todo`, todo);
 
+        // To-Do를 역할별로 포맷팅
+        const formattedTodo = formatTodoByRole(todo);
+
         outputDiv.innerHTML = `
           <div class="output-box">
             <strong>고객이 하려는 일 (JTBD)</strong>
             ${jtbd}
           </div>
-          <div class="output-box">
-            <strong>판매자의 To-Do</strong>
-            ${todo}
+          <div class="output-box output-todo">
+            <strong>판매자의 To-Do (역할별)</strong>
+            ${formattedTodo}
           </div>
         `;
 
@@ -859,6 +879,33 @@ ${inputText}
           </div>
         `;
       }
+    }
+
+    // To-Do를 역할별로 포맷팅하는 함수
+    function formatTodoByRole(todoText) {
+      const roles = {
+        '프리세일즈': '#3b82f6',
+        '영업': '#10b981',
+        'CSM': '#f59e0b',
+        '마케팅': '#ec4899',
+        '기술지원': '#8b5cf6'
+      };
+
+      let formatted = todoText;
+
+      // 각 역할에 색상 적용
+      Object.keys(roles).forEach(role => {
+        const regex = new RegExp(`\\(${role}\\)`, 'g');
+        formatted = formatted.replace(
+          regex,
+          `<span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: ${roles[role]}15; color: ${roles[role]}; font-weight: 600; font-size: 11px; margin-right: 6px;">${role}</span>`
+        );
+      });
+
+      // 줄바꿈을 <br>로 변환
+      formatted = formatted.replace(/\n/g, '<br>');
+
+      return formatted;
     }
 
     // 데이터 저장
