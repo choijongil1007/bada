@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Discovery - BADA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-body: #f5f5f7;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f9fafb;
+      --border-subtle: #e5e7eb;
+      --border-strong: #d1d5db;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --accent-strong: #1d4ed8;
+      --success: #10b981;
+      --success-soft: #d1fae5;
+      --danger: #ef4444;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e5f0ff, #f5f5f7 45%);
+      color: var(--text-main);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(245, 245, 247, 0.9), rgba(245, 245, 247, 0.7));
+      border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 20%, #93c5fd, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.45);
+    }
+
+    .brand-text-main {
+      font-weight: 650;
+      letter-spacing: 0.02em;
+      font-size: 17px;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.12s ease;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      transform: translateY(-1px);
+    }
+
+    /* Main Layout */
+    main {
+      flex: 1;
+    }
+
+    .content-wrapper {
+      max-width: 1280px;
+      margin: 24px auto;
+      padding: 0 20px 32px 20px;
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* Sidebar - Deal Info */
+    .sidebar-panel {
+      position: sticky;
+      top: 90px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 18px;
+    }
+
+    .sidebar-header {
+      margin-bottom: 12px;
+    }
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+
+    .sidebar-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .deal-info-item {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 12px;
+    }
+
+    .deal-info-item:last-child {
+      border-bottom: none;
+    }
+
+    .deal-info-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .deal-info-value {
+      color: var(--text-main);
+    }
+
+    .progress-indicator {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .progress-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--bg-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #34d399, #10b981);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Content */
+    .main-panel {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      border: 1px solid rgba(229, 231, 235, 0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 20px;
+    }
+
+    .main-header {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .main-title {
+      font-size: 20px;
+      font-weight: 650;
+      margin: 0 0 6px 0;
+    }
+
+    .main-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Phase Sections */
+    .phase-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .phase-section {
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      background: linear-gradient(135deg, rgba(249, 250, 251, 0.96), rgba(255, 255, 255, 0.98));
+      overflow: hidden;
+      transition: all 0.15s ease;
+    }
+
+    .phase-section:hover {
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+      border-color: rgba(37, 99, 235, 0.2);
+    }
+
+    .phase-header {
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #f9fafb, #ffffff);
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s ease;
+    }
+
+    .phase-header:hover {
+      background: linear-gradient(135deg, #f3f4f6, #f9fafb);
+    }
+
+    .phase-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .phase-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+      color: var(--accent-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .phase-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .phase-toggle {
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .phase-section.open .phase-toggle {
+      transform: rotate(180deg);
+    }
+
+    .phase-content {
+      display: none;
+      padding: 16px;
+    }
+
+    .phase-section.open .phase-content {
+      display: block;
+    }
+
+    /* Question Fields */
+    .question-field {
+      margin-bottom: 14px;
+    }
+
+    .question-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--text-main);
+      resize: vertical;
+      transition: all 0.15s ease;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+
+    textarea::placeholder {
+      color: #9ca3af;
+    }
+
+    /* Buttons */
+    .phase-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .btn-primary {
+      border: none;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #34d399, #10b981);
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+      transition: all 0.12s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #10b981, #059669);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 36px rgba(5, 150, 105, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.12s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1);
+      transform: translateY(-0.5px);
+    }
+
+    /* Output Boxes */
+    .output-boxes {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .output-box {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--success-soft);
+      border-left: 4px solid var(--success);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .output-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-main);
+      font-size: 13px;
+    }
+
+    .output-loading {
+      background: var(--accent-soft);
+      border-left-color: var(--accent);
+      color: var(--accent-strong);
+    }
+
+    .output-error {
+      background: #fee2e2;
+      border-left-color: var(--danger);
+      color: #991b1b;
+    }
+
+    /* Save Banner */
+    .save-banner {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #34d399, #10b981);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 14px 40px rgba(16, 185, 129, 0.5);
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      animation: slideUp 0.3s ease;
+    }
+
+    .save-banner.show {
+      display: flex;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar-panel {
+        position: relative;
+        top: 0;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-inner {
+        padding-inline: 14px;
+      }
+
+      .content-wrapper {
+        padding-inline: 14px;
+      }
+
+      .brand-text-sub {
+        display: none;
+      }
+
+      .phase-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-logo">B</div>
+          <div>
+            <div class="brand-text-main">BADA</div>
+            <div class="brand-text-sub">Discovery · Buyer Journey Mapping</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a href="index.html" class="btn-back">
+            <span>←</span>
+            <span>Deal 목록</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="content-wrapper">
+        <!-- Sidebar: Deal Info -->
+        <aside class="sidebar-panel">
+          <div class="sidebar-header">
+            <h3 class="sidebar-title">Deal 정보</h3>
+            <p class="sidebar-subtitle">현재 작업 중인 Deal</p>
+          </div>
+          <div id="deal-info"></div>
+          <div class="progress-indicator">
+            <div class="progress-label">Discovery 진행률</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main: Discovery Phases -->
+        <section class="main-panel">
+          <div class="main-header">
+            <h1 class="main-title">Discovery 입력</h1>
+            <p class="main-subtitle">
+              고객의 구매 여정(Buyer Journey)을 단계별로 파악하여 효과적인 영업 전략을 수립합니다.
+              각 단계에서 고객의 행동, 감정, 접점, 문제를 입력하면 AI가 JTBD와 To-Do를 생성합니다.
+            </p>
+          </div>
+          <div class="phase-sections" id="phases"></div>
+        </section>
+      </div>
+    </main>
+
+    <div class="save-banner" id="save-banner">
+      ✓ 저장되었습니다
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "bada_deals";
+    const phaseNames = ["인식", "고려", "평가", "구매"];
+    const questions = ["고객 행동", "고객 감정", "고객 접점", "고객 문제"];
+
+    let dealData = null;
+    let dealId = null;
+
+    // 초기화
+    document.addEventListener("DOMContentLoaded", () => {
+      dealId = new URLSearchParams(window.location.search).get("dealId");
+      
+      if (!dealId) {
+        alert("Deal ID가 없습니다. 메인 페이지로 이동합니다.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      loadDealData();
+      renderDealInfo();
+      renderPhases();
+      updateProgress();
+    });
+
+    // Deal 데이터 로드
+    function loadDealData() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const deals = raw ? JSON.parse(raw) : {};
+      dealData = deals[dealId];
+
+      if (!dealData) {
+        alert("Deal 정보를 찾을 수 없습니다.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (!dealData.discovery) {
+        dealData.discovery = {};
+      }
+    }
+
+    // Deal 정보 표시
+    function renderDealInfo() {
+      const dealInfoEl = document.getElementById("deal-info");
+      const m = dealData.meta;
+
+      const items = [
+        { label: "Deal 이름", value: m.dealName },
+        { label: "고객사", value: m.customerName },
+        { label: "고객 담당자", value: m.buyerPersona },
+        { label: "솔루션", value: m.solutionName },
+        { label: "단계", value: m.stage },
+        { label: "자사 담당자", value: m.ownerName },
+      ];
+
+      dealInfoEl.innerHTML = items
+        .map(
+          (item) => `
+        <div class="deal-info-item">
+          <div class="deal-info-label">${item.label}</div>
+          <div class="deal-info-value">${item.value || "(입력 없음)"}</div>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    // Phase 섹션 렌더링
+    function renderPhases() {
+      const phasesEl = document.getElementById("phases");
+
+      phaseNames.forEach((phaseName, phaseIdx) => {
+        const section = document.createElement("div");
+        section.className = "phase-section";
+        if (phaseIdx === 0) section.classList.add("open");
+
+        const header = document.createElement("div");
+        header.className = "phase-header";
+        header.innerHTML = `
+          <div class="phase-header-left">
+            <div class="phase-number">${phaseIdx + 1}</div>
+            <div class="phase-title">${phaseName} 단계</div>
+          </div>
+          <div class="phase-toggle">▼</div>
+        `;
+
+        header.onclick = () => {
+          section.classList.toggle("open");
+        };
+
+        const content = document.createElement("div");
+        content.className = "phase-content";
+
+        const inputs = {};
+
+        questions.forEach((q) => {
+          const field = document.createElement("div");
+          field.className = "question-field";
+
+          const label = document.createElement("label");
+          label.className = "question-label";
+          label.textContent = q;
+
+          const textarea = document.createElement("textarea");
+          textarea.placeholder = `${phaseName} 단계에서의 ${q}을 입력하세요...`;
+          
+          // 기존 데이터 로드
+          const savedKey = `${phaseName}_${q}`;
+          if (dealData.discovery[savedKey]) {
+            textarea.value = dealData.discovery[savedKey];
+          }
+
+          // 자동 저장
+          textarea.addEventListener("blur", () => {
+            saveDealData(savedKey, textarea.value);
+          });
+
+          inputs[q] = textarea;
+
+          field.appendChild(label);
+          field.appendChild(textarea);
+          content.appendChild(field);
+        });
+
+        const actionsDiv = document.createElement("div");
+        actionsDiv.className = "phase-actions";
+
+        const btnGenerate = document.createElement("button");
+        btnGenerate.className = "btn-primary";
+        btnGenerate.innerHTML = `<span>✨</span><span>Insight 생성</span>`;
+        btnGenerate.onclick = () => generateInsight(phaseName, inputs, content);
+
+        const btnSave = document.createElement("button");
+        btnSave.className = "btn-secondary";
+        btnSave.innerHTML = `<span>💾</span><span>저장</span>`;
+        btnSave.onclick = () => {
+          questions.forEach((q) => {
+            const savedKey = `${phaseName}_${q}`;
+            saveDealData(savedKey, inputs[q].value);
+          });
+          showSaveBanner();
+        };
+
+        actionsDiv.appendChild(btnGenerate);
+        actionsDiv.appendChild(btnSave);
+        content.appendChild(actionsDiv);
+
+        const outputDiv = document.createElement("div");
+        outputDiv.className = "output-boxes";
+        outputDiv.id = `output-${phaseIdx}`;
+
+        // 기존 insight 로드
+        const jtbdKey = `${phaseName}_jtbd`;
+        const todoKey = `${phaseName}_todo`;
+        if (dealData.discovery[jtbdKey] || dealData.discovery[todoKey]) {
+          outputDiv.innerHTML = `
+            <div class="output-box">
+              <strong>고객 JTBD (Jobs To Be Done)</strong>
+              ${dealData.discovery[jtbdKey] || "(생성되지 않음)"}
+            </div>
+            <div class="output-box">
+              <strong>판매자 To-Do</strong>
+              ${dealData.discovery[todoKey] || "(생성되지 않음)"}
+            </div>
+          `;
+        }
+
+        content.appendChild(outputDiv);
+
+        section.appendChild(header);
+        section.appendChild(content);
+        phasesEl.appendChild(section);
+      });
+    }
+
+    // Insight 생성
+    async function generateInsight(phaseName, inputs, contentEl) {
+      const outputDiv = contentEl.querySelector(".output-boxes");
+      outputDiv.innerHTML = `
+        <div class="output-box output-loading">
+          <strong>⏳ AI가 분석 중입니다...</strong>
+          잠시만 기다려주세요.
+        </div>
+      `;
+
+      const inputText = questions
+        .map((q) => `${q}: ${inputs[q].value || "(입력 없음)"}`)
+        .join("\n");
+
+      const prompt = `다음은 B2B 영업에서 "${phaseName}" 단계의 고객 정보입니다.
+
+${inputText}
+
+위 정보를 바탕으로:
+1. 고객의 JTBD (Jobs To Be Done): 고객이 이 단계에서 달성하려는 목표와 해결하려는 문제
+2. 판매자 To-Do: 영업 담당자가 이 단계에서 수행해야 할 구체적인 액션 아이템
+
+각각 3-5줄로 작성해주세요.`;
+
+      try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 1000,
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+
+        const data = await response.json();
+        const text = data.content?.[0]?.text || "";
+
+        let jtbd = "(JTBD를 생성하지 못했습니다)";
+        let todo = "(To-Do를 생성하지 못했습니다)";
+
+        // 응답 파싱
+        const lines = text.split("\n");
+        let currentSection = "";
+        let jtbdLines = [];
+        let todoLines = [];
+
+        lines.forEach((line) => {
+          if (line.includes("JTBD") || line.includes("Jobs To Be Done")) {
+            currentSection = "jtbd";
+          } else if (line.includes("To-Do") || line.includes("판매자")) {
+            currentSection = "todo";
+          } else if (line.trim()) {
+            if (currentSection === "jtbd") {
+              jtbdLines.push(line.trim());
+            } else if (currentSection === "todo") {
+              todoLines.push(line.trim());
+            }
+          }
+        });
+
+        if (jtbdLines.length > 0) jtbd = jtbdLines.join("\n");
+        if (todoLines.length > 0) todo = todoLines.join("\n");
+
+        // 저장
+        saveDealData(`${phaseName}_jtbd`, jtbd);
+        saveDealData(`${phaseName}_todo`, todo);
+
+        outputDiv.innerHTML = `
+          <div class="output-box">
+            <strong>고객 JTBD (Jobs To Be Done)</strong>
+            ${jtbd}
+          </div>
+          <div class="output-box">
+            <strong>판매자 To-Do</strong>
+            ${todo}
+          </div>
+        `;
+
+        updateProgress();
+      } catch (error) {
+        console.error("AI 호출 오류:", error);
+        outputDiv.innerHTML = `
+          <div class="output-box output-error">
+            <strong>⚠️ 오류 발생</strong>
+            AI 응답을 생성하는 중 오류가 발생했습니다. 다시 시도해주세요.
+          </div>
+        `;
+      }
+    }
+
+    // 데이터 저장
+    function saveDealData(key, value) {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const deals = raw ? JSON.parse(raw) : {};
+
+      if (!deals[dealId]) return;
+
+      deals[dealId].discovery[key] = value;
+      deals[dealId].meta.updatedAt = new Date().toISOString();
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(deals));
+      dealData = deals[dealId];
+      updateProgress();
+    }
+
+    // 저장 배너 표시
+    function showSaveBanner() {
+      const banner = document.getElementById("save-banner");
+      banner.classList.add("show");
+      setTimeout(() => {
+        banner.classList.remove("show");
+      }, 2000);
+    }
+
+    // 진행률 업데이트
+    function updateProgress() {
+      const totalFields = phaseNames.length * (questions.length + 2); // 질문 + JTBD + Todo
+      let filledFields = 0;
+
+      phaseNames.forEach((phase) => {
+        questions.forEach((q) => {
+          const key = `${phase}_${q}`;
+          if (dealData.discovery[key] && dealData.discovery[key].trim()) {
+            filledFields++;
+          }
+        });
+
+        // JTBD와 Todo 체크
+        const jtbdKey = `${phase}_jtbd`;
+        const todoKey = `${phase}_todo`;
+        if (dealData.discovery[jtbdKey] && dealData.discovery[jtbdKey].trim()) {
+          filledFields++;
+        }
+        if (dealData.discovery[todoKey] && dealData.discovery[todoKey].trim()) {
+          filledFields++;
+        }
+      });
+
+      const percentage = Math.round((filledFields / totalFields) * 100);
+      document.getElementById("progress-fill").style.width = `${percentage}%`;
+    }
+  </script>
+</body>
+</html}
