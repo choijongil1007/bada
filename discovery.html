@@ -424,7 +424,6 @@
       border-left: 4px solid var(--success);
       font-size: 12px;
       line-height: 1.6;
-      white-space: pre-wrap;
     }
 
     .output-box strong {
@@ -432,6 +431,16 @@
       margin-bottom: 6px;
       color: var(--text-main);
       font-size: 13px;
+    }
+
+    .output-box ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .output-box li {
+      margin-bottom: 6px;
+      line-height: 1.6;
     }
 
     .output-todo {
@@ -728,11 +737,12 @@
         const jtbdKey = `${phaseName}_jtbd`;
         const todoKey = `${phaseName}_todo`;
         if (dealData.discovery[jtbdKey] || dealData.discovery[todoKey]) {
+          const formattedJTBD = formatJTBD(dealData.discovery[jtbdKey] || "(생성되지 않음)");
           const formattedTodo = formatTodoByRole(dealData.discovery[todoKey] || "(생성되지 않음)");
           outputDiv.innerHTML = `
             <div class="output-box">
               <strong>고객이 하려는 일 (JTBD)</strong>
-              ${dealData.discovery[jtbdKey] || "(생성되지 않음)"}
+              ${formattedJTBD}
             </div>
             <div class="output-box output-todo">
               <strong>판매자의 To-Do (역할별)</strong>
@@ -853,13 +863,14 @@ ${inputText}
         saveDealData(`${phaseName}_jtbd`, jtbd);
         saveDealData(`${phaseName}_todo`, todo);
 
-        // To-Do를 역할별로 포맷팅
+        // 포맷팅
+        const formattedJTBD = formatJTBD(jtbd);
         const formattedTodo = formatTodoByRole(todo);
 
         outputDiv.innerHTML = `
           <div class="output-box">
             <strong>고객이 하려는 일 (JTBD)</strong>
-            ${jtbd}
+            ${formattedJTBD}
           </div>
           <div class="output-box output-todo">
             <strong>판매자의 To-Do (역할별)</strong>
@@ -880,6 +891,22 @@ ${inputText}
           </div>
         `;
       }
+    }
+
+    // JTBD를 불릿 포인트로 포맷팅하는 함수
+    function formatJTBD(jtbdText) {
+      // 공백 정리
+      let formatted = jtbdText.trim();
+      
+      // 문장 단위로 분리 (마침표, 느낌표, 물음표 기준)
+      const sentences = formatted.split(/(?<=[.!?])\s+/).filter(s => s.trim());
+      
+      // 불릿 포인트로 변환
+      if (sentences.length > 0) {
+        return '<ul>' + sentences.map(s => `<li>${s.trim()}</li>`).join('') + '</ul>';
+      }
+      
+      return formatted;
     }
 
     // To-Do를 역할별로 포맷팅하는 함수
