@@ -1775,100 +1775,108 @@
     }
 
     function computeDealWinScore() {
-      const budgetReadiness = getSelectValue("budgetReadiness", "dw");
-      const authorityChampion = getSelectValue("authorityChampion", "dw");
-      const authorityAccess = getSelectValue("authorityAccess", "dw");
-      const needFit = getSelectValue("needFit", "dw");
-      const needCompetition = getSelectValue("needCompetition", "dw");
-      const timelineUrgency = getSelectValue("timelineUrgency", "dw");
-      const timelineEase = getSelectValue("timelineEase", "dw");
+  const budgetReadiness = getSelectValue("budgetReadiness", "dw");
+  const authorityChampion = getSelectValue("authorityChampion", "dw");
+  const authorityAccess = getSelectValue("authorityAccess", "dw");
+  const needFit = getSelectValue("needFit", "dw");
+  const needCompetition = getSelectValue("needCompetition", "dw");
+  const timelineUrgency = getSelectValue("timelineUrgency", "dw");
+  const timelineEase = getSelectValue("timelineEase", "dw");
 
-      const values = [
-        budgetReadiness, authorityChampion, authorityAccess,
-        needFit, needCompetition, timelineUrgency, timelineEase
-      ];
+  const values = [
+    budgetReadiness, authorityChampion, authorityAccess,
+    needFit, needCompetition, timelineUrgency, timelineEase
+  ];
 
-      if (values.some((v) => v == null)) {
-        showModal("입력 오류", "모든 Deal 항목에 점수를 입력해 주세요.");
-        return;
-      }
+  if (values.some((v) => v == null)) {
+    showModal("입력 오류", "모든 Deal 항목에 점수를 입력해 주세요.");
+    return;
+  }
 
-      const budgetSum = budgetReadiness;
-      const authoritySum = avg([authorityChampion, authorityAccess]);
-      const needSum = avg([needFit, needCompetition]);
-      const timelineSum = avg([timelineUrgency, timelineEase]);
+  const budgetSum = budgetReadiness;
+  const authoritySum = avg([authorityChampion, authorityAccess]);
+  const needSum = avg([needFit, needCompetition]);
+  const timelineSum = avg([timelineUrgency, timelineEase]);
 
-      const dealScore = avg([budgetSum, authoritySum, needSum, timelineSum]);
-      const dealScoreRounded = Math.max(0, Math.min(100, (dealScore / 5) * 100));
+  const dealScore = avg([budgetSum, authoritySum, needSum, timelineSum]);
+  const dealScoreRounded = Math.max(0, Math.min(100, (dealScore / 5) * 100));
 
-      let winProb = 10;
-      let winLabel = "매우 낮음";
-      if (dealScoreRounded >= 81) {
-        winProb = 90; winLabel = "매우 높음";
-      } else if (dealScoreRounded >= 61) {
-        winProb = 70; winLabel = "높음";
-      } else if (dealScoreRounded >= 41) {
-        winProb = 50; winLabel = "중간";
-      } else if (dealScoreRounded >= 21) {
-        winProb = 30; winLabel = "낮음";
-      }
+  let winProb = 10;
+  let winLabel = "매우 낮음";
+  if (dealScoreRounded >= 81) {
+    winProb = 90; winLabel = "매우 높음";
+  } else if (dealScoreRounded >= 61) {
+    winProb = 70; winLabel = "높음";
+  } else if (dealScoreRounded >= 41) {
+    winProb = 50; winLabel = "중간";
+  } else if (dealScoreRounded >= 21) {
+    winProb = 30; winLabel = "낮음";
+  }
 
-      document.getElementById("dealScoreValue").textContent =
-        dealScoreRounded.toFixed(1) + "%";
-      document.getElementById("winProbValue").textContent =
-        winProb + "% (" + winLabel + ")";
+  document.getElementById("dealScoreValue").textContent =
+    dealScoreRounded.toFixed(1) + "%";
+  document.getElementById("winProbValue").textContent =
+    winProb + "% (" + winLabel + ")";
 
-      const riskList = document.getElementById("dealWinRiskList");
-      riskList.innerHTML = "";
-      const risks = [];
+  const riskList = document.getElementById("dealWinRiskList");
+  riskList.innerHTML = "";
+  const risks = [];
 
-      if (budgetSum <= 2) {
-        risks.push("예산 리스크: 구매 가능성 낮음 (Budget 합산 ≤ 2)");
-      }
-      if (authoritySum <= 2) {
-        risks.push("Authority 리스크: 챔피언/EB 영향력 및 접근성이 부족합니다.");
-      }
-      if (needSum <= 2) {
-        risks.push("Need 리스크: 문제 적합성이 낮거나 경쟁 우위가 부족합니다.");
-      }
-      if (timelineSum <= 2) {
-        risks.push("Timeline 리스크: 시급성이 낮거나 도입이 어렵습니다.");
-      }
+  if (budgetSum <= 2) {
+    risks.push("예산 리스크: 구매 가능성 낮음 (Budget 합산 ≤ 2)");
+  }
+  if (authoritySum <= 2) {
+    risks.push("Authority 리스크: 챔피언/EB 영향력 및 접근성이 부족합니다.");
+  }
+  if (needSum <= 2) {
+    risks.push("Need 리스크: 문제 적합성이 낮거나 경쟁 우위가 부족합니다.");
+  }
+  if (timelineSum <= 2) {
+    risks.push("Timeline 리스크: 시급성이 낮거나 도입이 어렵습니다.");
+  }
 
-      if (!risks.length) {
-        const li = document.createElement("li");
-        li.textContent = "특별히 눈에 띄는 리스크는 없습니다. 다만 세부 항목을 정성적으로 점검해 보세요.";
-        riskList.appendChild(li);
-      } else {
-        risks.forEach((r) => {
-          const li = document.createElement("li");
-          li.textContent = r;
-          riskList.appendChild(li);
-        });
-      }
+  if (!risks.length) {
+    const li = document.createElement("li");
+    li.textContent = "특별히 눈에 띄는 리스크는 없습니다. 다만 세부 항목을 정성적으로 점검해 보세요.";
+    riskList.appendChild(li);
+  } else {
+    risks.forEach((r) => {
+      const li = document.createElement("li");
+      li.textContent = r;
+      riskList.appendChild(li);
+    });
+  }
 
-      document.getElementById("dealWinResultArea").style.display = "";
+  document.getElementById("dealWinResultArea").style.display = "";
 
-      if (!currentDeal) currentDeal = {};
-      currentDeal.dealScore = dealScoreRounded;
-      currentDeal.winProb = winProb;
-      currentDeal.winProbLabel = winLabel;
-      currentDeal.dealWinGroups = {
-        budget: budgetSum,
-        authority: authoritySum,
-        need: needSum,
-        timeline: timelineSum,
-      };
-      currentDeal.dealWinRiskSummary = risks;
+  // currentDeal 객체에 개별 항목 점수도 저장
+  if (!currentDeal) currentDeal = {};
+  currentDeal.dealScore = dealScoreRounded;
+  currentDeal.winProb = winProb;
+  currentDeal.winProbLabel = winLabel;
+  currentDeal.dealWinGroups = {
+    budget: budgetReadiness, // 개별 점수 저장
+    authorityChampion: authorityChampion,
+    authorityAccess: authorityAccess,
+    needFit: needFit,
+    needCompetition: needCompetition,
+    timelineUrgency: timelineUrgency,
+    timelineEase: timelineEase,
+    budgetAvg: budgetSum, // 평균값도 유지
+    authorityAvg: authoritySum,
+    needAvg: needSum,
+    timelineAvg: timelineSum,
+  };
+  currentDeal.dealWinRiskSummary = risks;
 
-      saveDQResults();
-      updateProgress();
+  saveDQResults();
+  updateProgress();
 
-      showModal(
-        "Win Probability",
-        `Deal Score ${dealScoreRounded.toFixed(1)}% → Win Probability ${winProb}% (${winLabel})`
-      );
-    }
+  showModal(
+    "Win Probability",
+    `Deal Score ${dealScoreRounded.toFixed(1)}% → Win Probability ${winProb}% (${winLabel})`
+  );
+}
 
     function computeTechFitScore() {
       const tfFunctional = getSelectValue("tfFunctional", "tf");
@@ -2181,32 +2189,58 @@
     }
 
     function saveDQResults() {
-      if (!currentDeal || currentDeal.dealScore == null || currentDeal.techScore == null) return;
+  if (!currentDeal || currentDeal.dealScore == null || currentDeal.techScore == null) return;
 
-      const deals = loadAllDeals();
-      if (!deals[dealId]) return;
+  const deals = loadAllDeals();
+  if (!deals[dealId]) return;
 
-      deals[dealId].dq = {
-        dealScore: currentDeal.dealScore,
-        winProb: currentDeal.winProb,
-        winProbLabel: currentDeal.winProbLabel,
-        techScore: currentDeal.techScore,
-        techRisk: currentDeal.techRisk,
-        techRiskLabel: currentDeal.techRiskLabel,
-        dealWinWeights: currentDeal.dealWinWeights,
-        techWeights: currentDeal.techWeights,
-        dealWinGroups: currentDeal.dealWinGroups,
-        techGroups: currentDeal.techGroups,
-        dealWinRiskSummary: currentDeal.dealWinRiskSummary,
-        techRiskSummary: currentDeal.techRiskSummary,
-        dashboardSummary: currentDeal.dashboardSummary
-      };
-
-      deals[dealId].meta.updatedAt = new Date().toISOString();
-
-      saveAllDeals(deals);
-      showSaveBanner();
+  // 개별 항목 점수도 함께 저장
+  deals[dealId].dq = {
+    dealScore: currentDeal.dealScore,
+    winProb: currentDeal.winProb,
+    winProbLabel: currentDeal.winProbLabel,
+    techScore: currentDeal.techScore,
+    techRisk: currentDeal.techRisk,
+    techRiskLabel: currentDeal.techRiskLabel,
+    dealWinWeights: currentDeal.dealWinWeights,
+    techWeights: currentDeal.techWeights,
+    dealWinGroups: currentDeal.dealWinGroups,
+    techGroups: currentDeal.techGroups,
+    dealWinRiskSummary: currentDeal.dealWinRiskSummary,
+    techRiskSummary: currentDeal.techRiskSummary,
+    dashboardSummary: currentDeal.dashboardSummary,
+    
+    // 개별 항목 점수 저장 (드롭다운 복원용)
+    dealWinScores: {
+      budgetReadiness: getSelectValue("budgetReadiness", "dw"),
+      authorityChampion: getSelectValue("authorityChampion", "dw"),
+      authorityAccess: getSelectValue("authorityAccess", "dw"),
+      needFit: getSelectValue("needFit", "dw"),
+      needCompetition: getSelectValue("needCompetition", "dw"),
+      timelineUrgency: getSelectValue("timelineUrgency", "dw"),
+      timelineEase: getSelectValue("timelineEase", "dw")
+    },
+    techFitScores: {
+      tfFunctional: getSelectValue("tfFunctional", "tf"),
+      tfCustomization: getSelectValue("tfCustomization", "tf"),
+      tfLegacy: getSelectValue("tfLegacy", "tf"),
+      envInfra: getSelectValue("envInfra", "tf"),
+      envIntegration: getSelectValue("envIntegration", "tf"),
+      envNetwork: getSelectValue("envNetwork", "tf"),
+      compSecurity: getSelectValue("compSecurity", "tf"),
+      compRegulatory: getSelectValue("compRegulatory", "tf"),
+      compData: getSelectValue("compData", "tf"),
+      humanTeam: getSelectValue("humanTeam", "tf"),
+      humanSupport: getSelectValue("humanSupport", "tf"),
+      humanTimeline: getSelectValue("humanTimeline", "tf")
     }
+  };
+
+  deals[dealId].meta.updatedAt = new Date().toISOString();
+
+  saveAllDeals(deals);
+  showSaveBanner();
+}
 
     function showSaveBanner() {
       const banner = document.getElementById("save-banner");
