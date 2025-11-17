@@ -438,6 +438,7 @@
       background: #f0f9ff;
       border-left-color: #3b82f6;
       line-height: 1.8;
+      white-space: normal;
     }
 
     .output-loading {
@@ -891,19 +892,22 @@ ${inputText}
         '기술지원': '#8b5cf6'
       };
 
-      let formatted = todoText;
+      // 공백 정리
+      let formatted = todoText.trim();
 
       // 각 역할에 색상 적용
       Object.keys(roles).forEach(role => {
         const regex = new RegExp(`\\(${role}\\)`, 'g');
         formatted = formatted.replace(
           regex,
-          `<span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: ${roles[role]}15; color: ${roles[role]}; font-weight: 600; font-size: 11px; margin-right: 6px;">${role}</span>`
+          `<br><span style="display: inline-block; padding: 2px 8px; border-radius: 12px; background: ${roles[role]}15; color: ${roles[role]}; font-weight: 600; font-size: 11px; margin-right: 6px; margin-top: 4px;">${role}</span>`
         );
       });
 
-      // 줄바꿈을 <br>로 변환
-      formatted = formatted.replace(/\n/g, '<br>');
+      // 첫 번째 <br> 제거 (맨 앞에 붙은 것)
+      if (formatted.startsWith('<br>')) {
+        formatted = formatted.substring(4);
+      }
 
       return formatted;
     }
