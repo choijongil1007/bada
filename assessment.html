@@ -2268,27 +2268,156 @@
     }
 
     function loadExistingDQData() {
-      if (!currentDeal.dq) return;
+  if (!currentDeal.dq) return;
 
-      const dq = currentDeal.dq;
+  const dq = currentDeal.dq;
 
-      if (dq.dealWinGroups) {
-        if (dq.dealScore) {
-          document.getElementById("dealScoreValue").textContent = dq.dealScore.toFixed(1) + "%";
-          document.getElementById("winProbValue").textContent = dq.winProb + "% (" + dq.winProbLabel + ")";
-          document.getElementById("dealWinResultArea").style.display = "";
-        }
+  // Deal Win Score 드롭다운 값 설정
+  if (dq.dealWinGroups) {
+    // Budget
+    if (dq.dealWinGroups.budget !== undefined) {
+      setSelectValue("budgetReadiness", "dw", dq.dealWinGroups.budget);
+    }
+    
+    // Authority
+    if (dq.dealWinGroups.authorityChampion !== undefined) {
+      setSelectValue("authorityChampion", "dw", dq.dealWinGroups.authorityChampion);
+    }
+    if (dq.dealWinGroups.authorityAccess !== undefined) {
+      setSelectValue("authorityAccess", "dw", dq.dealWinGroups.authorityAccess);
+    }
+    
+    // Need
+    if (dq.dealWinGroups.needFit !== undefined) {
+      setSelectValue("needFit", "dw", dq.dealWinGroups.needFit);
+    }
+    if (dq.dealWinGroups.needCompetition !== undefined) {
+      setSelectValue("needCompetition", "dw", dq.dealWinGroups.needCompetition);
+    }
+    
+    // Timeline
+    if (dq.dealWinGroups.timelineUrgency !== undefined) {
+      setSelectValue("timelineUrgency", "dw", dq.deelWinGroups.timelineUrgency);
+    }
+    if (dq.dealWinGroups.timelineEase !== undefined) {
+      setSelectValue("timelineEase", "dw", dq.dealWinGroups.timelineEase);
+    }
 
-        if (dq.dealWinRiskSummary) {
-          const riskList = document.getElementById("dealWinRiskList");
-          riskList.innerHTML = "";
-          dq.dealWinRiskSummary.forEach(risk => {
-            const li = document.createElement("li");
-            li.textContent = risk;
-            riskList.appendChild(li);
-          });
-        }
+    if (dq.dealScore) {
+      document.getElementById("dealScoreValue").textContent = dq.dealScore.toFixed(1) + "%";
+      document.getElementById("winProbValue").textContent = dq.winProb + "% (" + dq.winProbLabel + ")";
+      document.getElementById("dealWinResultArea").style.display = "";
+    }
+
+    if (dq.dealWinRiskSummary) {
+      const riskList = document.getElementById("dealWinRiskList");
+      riskList.innerHTML = "";
+      dq.dealWinRiskSummary.forEach(risk => {
+        const li = document.createElement("li");
+        li.textContent = risk;
+        riskList.appendChild(li);
+      });
+    }
+  }
+
+  // Technical Fit Score 드롭다운 값 설정
+  if (dq.techGroups) {
+    // Technical Fit
+    if (dq.techGroups.tfFunctional !== undefined) {
+      setSelectValue("tfFunctional", "tf", dq.techGroups.tfFunctional);
+    }
+    if (dq.techGroups.tfCustomization !== undefined) {
+      setSelectValue("tfCustomization", "tf", dq.techGroups.tfCustomization);
+    }
+    if (dq.techGroups.tfLegacy !== undefined) {
+      setSelectValue("tfLegacy", "tf", dq.techGroups.tfLegacy);
+    }
+    
+    // Environment & Integration
+    if (dq.techGroups.envInfra !== undefined) {
+      setSelectValue("envInfra", "tf", dq.techGroups.envInfra);
+    }
+    if (dq.techGroups.envIntegration !== undefined) {
+      setSelectValue("envIntegration", "tf", dq.techGroups.envIntegration);
+    }
+    if (dq.techGroups.envNetwork !== undefined) {
+      setSelectValue("envNetwork", "tf", dq.techGroups.envNetwork);
+    }
+    
+    // Compliance & Security
+    if (dq.techGroups.compSecurity !== undefined) {
+      setSelectValue("compSecurity", "tf", dq.techGroups.compSecurity);
+    }
+    if (dq.techGroups.compRegulatory !== undefined) {
+      setSelectValue("compRegulatory", "tf", dq.techGroups.compRegulatory);
+    }
+    if (dq.techGroups.compData !== undefined) {
+      setSelectValue("compData", "tf", dq.techGroups.compData);
+    }
+    
+    // Human & Execution
+    if (dq.techGroups.humanTeam !== undefined) {
+      setSelectValue("humanTeam", "tf", dq.techGroups.humanTeam);
+    }
+    if (dq.techGroups.humanSupport !== undefined) {
+      setSelectValue("humanSupport", "tf", dq.techGroups.humanSupport);
+    }
+    if (dq.techGroups.humanTimeline !== undefined) {
+      setSelectValue("humanTimeline", "tf", dq.techGroups.humanTimeline);
+    }
+
+    // 가중치 설정
+    if (dq.techWeights) {
+      if (dq.techWeights.wTF !== undefined) {
+        document.getElementById("tfWeightTechnicalFit").value = dq.techWeights.wTF.toFixed(2);
       }
+      if (dq.techWeights.wEnv !== undefined) {
+        document.getElementById("tfWeightEnvironment").value = dq.techWeights.wEnv.toFixed(2);
+      }
+      if (dq.techWeights.wComp !== undefined) {
+        document.getElementById("tfWeightCompliance").value = dq.techWeights.wComp.toFixed(2);
+      }
+      if (dq.techWeights.wHuman !== undefined) {
+        document.getElementById("tfWeightHuman").value = dq.techWeights.wHuman.toFixed(2);
+      }
+      
+      // 가중치 합계 업데이트 트리거
+      document.getElementById("tfWeightTechnicalFit").dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    if (dq.techScore) {
+      document.getElementById("techScoreValue").textContent = dq.techScore.toFixed(1) + "%";
+      document.getElementById("techRiskValue").textContent = dq.techRisk + " (" + dq.techRiskLabel + ")";
+      document.getElementById("techFitResultArea").style.display = "";
+    }
+
+    if (dq.techRiskSummary) {
+      const riskList = document.getElementById("techFitRiskList");
+      riskList.innerHTML = "";
+      dq.techRiskSummary.forEach(risk => {
+        const li = document.createElement("li");
+        li.textContent = risk;
+        riskList.appendChild(li);
+      });
+    }
+  }
+
+  if (dq.dealScore && dq.techScore) {
+    document.getElementById("dashboardSectionWrapper").style.display = "";
+    updateDashboard();
+  }
+}
+
+// 드롭다운 메뉴에 값을 설정하는 헬퍼 함수 추가
+function setSelectValue(name, type, value) {
+  const selector = type === "dw"
+    ? `select[data-dw-score="${name}"]`
+    : `select[data-tf-score="${name}"]`;
+  const el = document.querySelector(selector);
+  if (el && value !== null && value !== undefined) {
+    el.value = value.toString();
+  }
+}
 
       if (dq.techGroups) {
         if (dq.techScore) {
